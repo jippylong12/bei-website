@@ -1,0 +1,29 @@
+.donateButton {
+  display: inline-block;
+  padding: 1rem 3rem;
+  background: var(--color-accent);
+  color: #000 !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  transition: opacity 0.2s ease;
+}
+
+.donateButton:hover {
+  opacity: 0.85;
+  color: #000 !important;
+}
+
+.infoSection {
+  padding: 4rem 0;
+}
+
+.text {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
