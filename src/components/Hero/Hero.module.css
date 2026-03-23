@@ -1,5 +1,4 @@
 .hero {
-  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,7 +6,18 @@
   background-size: cover;
   background-position: center;
   background-color: var(--color-bg);
-  padding: 4rem 0;
+  padding: var(--space-2xl) 0;
+}
+
+.heroFull {
+  min-height: 70vh;
+  padding: var(--space-3xl) 0;
+}
+
+.heroCompact {
+  min-height: 0;
+  padding: var(--space-3xl) 0 var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .content {
@@ -15,20 +25,21 @@
 }
 
 .title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   text-transform: uppercase;
   letter-spacing: 3px;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-md);
 }
 
 .subtitle {
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-size: clamp(1rem, 2vw, 1.25rem);
   color: var(--color-text-muted);
   font-weight: 300;
   letter-spacing: 2px;
   text-transform: uppercase;
+  line-height: 1.6;
 }
 
 .cta {
-  margin-top: 2rem;
+  margin-top: var(--space-xl);
 }

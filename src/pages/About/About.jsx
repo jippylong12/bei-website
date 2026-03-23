@@ -34,7 +34,7 @@ export default function About() {
           <li>Funds and coordinates research</li>
           <li>Hosts conferences and convenings</li>
         </ul>
-        <p style={{ marginTop: '1rem' }}>
+        <p>
           BEI is a Texas nonprofit corporation and a 501(c)(3) tax-exempt
           organization.
         </p>

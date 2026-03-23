@@ -1,14 +1,35 @@
 :root {
+  /* Colors */
   --color-bg: #161616;
   --color-bg-elevated: #1e1e1e;
   --color-text: #f7f7f7;
   --color-text-muted: #a0a0a0;
   --color-accent: #f7931a;
   --color-border: #333;
+
+  /* Typography */
   --font-heading: 'Fjalla One', sans-serif;
   --font-body: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+
+  /* Layout */
   --max-width: 1200px;
   --header-height: 80px;
+
+  /* Spacing scale (8px base) */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 1rem;      /* 16px */
+  --space-md: 1.5rem;    /* 24px */
+  --space-lg: 2rem;      /* 32px */
+  --space-xl: 3rem;      /* 48px */
+  --space-2xl: 4rem;     /* 64px */
+  --space-3xl: 6rem;     /* 96px */
+  --space-4xl: 8rem;     /* 128px */
+
+  /* Section rhythm */
+  --section-padding: var(--space-3xl);
+  --card-padding: var(--space-lg);
+  --card-radius: 8px;
+  --grid-gap: var(--space-lg);
 }
 
 *,
@@ -58,7 +79,17 @@ img {
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding: var(--space-2xl);
+  }
+
+  .container {
+    padding: 0 var(--space-md);
+  }
 }
 
 .sr-only {

@@ -22,7 +22,7 @@ export default function Donate() {
       </Hero>
 
       <section className={styles.infoSection}>
-        <div className="container" style={{ textAlign: 'center' }}>
+        <div className="container">
           <p className={styles.text}>
             BEI is a 501(c)(3) tax-exempt nonprofit corporation. Your donation
             may be tax-deductible to the extent allowed by law.

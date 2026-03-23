@@ -1,19 +1,20 @@
 .ctaSection {
-  padding: 5rem 0;
+  padding: var(--section-padding) 0;
   text-align: center;
+  border-top: 1px solid var(--color-border);
 }
 
 .ctaTitle {
-  font-size: 2rem;
+  font-size: 1.75rem;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-sm);
 }
 
 .ctaText {
   color: var(--color-text-muted);
   font-size: 1.1rem;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-lg);
 }
 
 .ctaButton {
