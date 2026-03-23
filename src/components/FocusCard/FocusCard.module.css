@@ -1,8 +1,8 @@
 .card {
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 2rem;
+  border-radius: var(--card-radius);
+  padding: var(--space-xl);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
@@ -12,8 +12,8 @@
 }
 
 .title {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+  margin-bottom: var(--space-sm);
   text-transform: uppercase;
   letter-spacing: 1px;
 }

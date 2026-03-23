@@ -1,11 +1,15 @@
 .section {
-  padding: 5rem 0;
+  padding: var(--section-padding) 0;
+}
+
+.section + .section {
+  padding-top: 0;
 }
 
 .inner {
   display: flex;
   align-items: center;
-  gap: 4rem;
+  gap: var(--space-2xl);
 }
 
 .reverse {
@@ -19,9 +23,9 @@
 
 .image {
   width: 100%;
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   object-fit: cover;
-  max-height: 400px;
+  aspect-ratio: 4 / 3;
 }
 
 .content {
@@ -30,26 +34,26 @@
 }
 
 .title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  margin-bottom: var(--space-md);
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
 .content p {
   color: var(--color-text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-sm);
   line-height: 1.8;
 }
 
 .content ul {
   list-style: none;
-  margin-top: 1rem;
+  margin-top: var(--space-sm);
 }
 
 .content ul li {
   color: var(--color-text-muted);
-  padding: 0.4rem 0;
+  padding: var(--space-xs) 0;
   padding-left: 1.25rem;
   position: relative;
 }
@@ -70,9 +74,14 @@
   .inner,
   .reverse {
     flex-direction: column;
+    gap: var(--space-lg);
   }
 
   .imageWrap {
     width: 100%;
+  }
+
+  .title {
+    font-size: 1.5rem;
   }
 }

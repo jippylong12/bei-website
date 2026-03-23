@@ -1,5 +1,5 @@
 .contactSection {
-  padding: 5rem 0;
+  padding: var(--section-padding) 0;
   text-align: center;
 }
 
@@ -7,19 +7,19 @@
   color: var(--color-text-muted);
   font-size: 1.15rem;
   max-width: 600px;
-  margin: 0 auto 2rem;
+  margin: 0 auto var(--space-xl);
   line-height: 1.8;
 }
 
 .emailLink {
   display: inline-block;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   font-family: var(--font-heading);
   letter-spacing: 2px;
   color: var(--color-accent) !important;
   border: 2px solid var(--color-accent);
-  padding: 1rem 2.5rem;
+  padding: 0.75rem 2rem;
   border-radius: 4px;
   transition: background 0.2s ease, color 0.2s ease;
 }

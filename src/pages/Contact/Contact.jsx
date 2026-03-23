@@ -7,7 +7,7 @@ export default function Contact() {
       <Hero title="Contact Us" subtitle="Drop us a line!" />
 
       <section className={styles.contactSection}>
-        <div className="container" style={{ textAlign: 'center' }}>
+        <div className="container">
           <p className={styles.text}>
             Have questions about Bitcoin education, partnerships, or our programs?
             Reach out to us directly.

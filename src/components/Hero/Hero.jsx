@@ -1,11 +1,14 @@
 import styles from './Hero.module.css';
 
 export default function Hero({ title, subtitle, backgroundImage, children }) {
+  const hasBackground = !!backgroundImage;
+  const heroClass = `${styles.hero} ${hasBackground ? styles.heroFull : styles.heroCompact}`;
+
   return (
     <section
-      className={styles.hero}
+      className={heroClass}
       style={{
-        backgroundImage: backgroundImage
+        backgroundImage: hasBackground
           ? `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${backgroundImage})`
           : undefined,
       }}

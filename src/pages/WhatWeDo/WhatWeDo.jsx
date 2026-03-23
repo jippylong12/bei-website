@@ -57,7 +57,7 @@ export default function WhatWeDo() {
       </Section>
 
       <section className={styles.ctaSection}>
-        <div className="container" style={{ textAlign: 'center' }}>
+        <div className="container">
           <h2 className={styles.ctaTitle}>Get in Touch</h2>
           <p className={styles.ctaText}>
             Interested in bringing Bitcoin into your classroom or institution?
