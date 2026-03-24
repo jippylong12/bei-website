@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import Hero from '../../components/Hero/Hero';
-import FocusCard from '../../components/FocusCard/FocusCard';
-import Section from '../../components/Section/Section';
+import { motion } from 'motion/react';
+import BitcoinHero from '../../components/BitcoinHero/BitcoinHero';
+import AnimatedFocusCard from '../../components/AnimatedFocusCard/AnimatedFocusCard';
+import AnimatedSection from '../../components/AnimatedSection/AnimatedSection';
 import styles from './Home.module.css';
 
 const focusAreas = [
@@ -32,28 +33,40 @@ export default function Home() {
 
   return (
     <>
-      <Hero
+      <BitcoinHero
         title="Bitcoin Education Institute"
         subtitle="Advancing the Teaching and Research of Bitcoin"
-        backgroundImage={`${base}images/hero.png`}
       >
-        <Link to="/what-we-do" className={styles.ctaButton}>
-          Learn More
-        </Link>
-      </Hero>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          <Link to="/what-we-do" className={styles.ctaButton}>
+            Learn More
+          </Link>
+        </motion.div>
+      </BitcoinHero>
 
       <section className={styles.focusSection}>
         <div className="container">
-          <h2 className={styles.sectionTitle}>What BEI Does</h2>
+          <motion.h2
+            className={styles.sectionTitle}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            What BEI Does
+          </motion.h2>
           <div className={styles.grid}>
-            {focusAreas.map((area) => (
-              <FocusCard key={area.title} {...area} />
+            {focusAreas.map((area, i) => (
+              <AnimatedFocusCard key={area.title} {...area} index={i} />
             ))}
           </div>
         </div>
       </section>
 
-      <Section
+      <AnimatedSection
         title="Curriculum Integration"
         image={`${base}images/course.jpg`}
         imageAlt="Bitcoin education classroom"
@@ -68,20 +81,36 @@ export default function Home() {
           already teaching, making it accessible across departments and
           disciplines.
         </p>
-        <Link to="/what-we-do" className={styles.ctaButton}>
-          View Course Details
-        </Link>
-      </Section>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+          <Link to="/what-we-do" className={styles.ctaButton}>
+            View Course Details
+          </Link>
+        </motion.div>
+      </AnimatedSection>
 
       <section className={styles.whySection}>
         <div className="container">
-          <h2 className={styles.sectionTitle}>Why Bitcoin in Education?</h2>
-          <p className={styles.whyText}>
+          <motion.h2
+            className={styles.sectionTitle}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Why Bitcoin in Education?
+          </motion.h2>
+          <motion.p
+            className={styles.whyText}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
             Bitcoin has reshaped finance, energy, and computing — yet remains
             underrepresented in education. BEI exists to close that gap, ensuring
             future leaders and scholars have the tools to engage with this
             transformative technology.
-          </p>
+          </motion.p>
         </div>
       </section>
     </>

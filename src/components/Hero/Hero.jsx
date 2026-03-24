@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import styles from './Hero.module.css';
 
 export default function Hero({ title, subtitle, backgroundImage, children }) {
@@ -14,9 +15,34 @@ export default function Hero({ title, subtitle, backgroundImage, children }) {
       }}
     >
       <div className={`container ${styles.content}`}>
-        <h1 className={styles.title}>{title}</h1>
-        {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-        {children && <div className={styles.cta}>{children}</div>}
+        <motion.h1
+          className={styles.title}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {title}
+        </motion.h1>
+        {subtitle && (
+          <motion.p
+            className={styles.subtitle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {subtitle}
+          </motion.p>
+        )}
+        {children && (
+          <motion.div
+            className={styles.cta}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {children}
+          </motion.div>
+        )}
       </div>
     </section>
   );

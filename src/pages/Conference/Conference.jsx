@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import Hero from '../../components/Hero/Hero';
 import styles from './Conference.module.css';
 
@@ -10,20 +11,28 @@ export default function Conference() {
         title="Annual Bitcoin Education Institute Conference 2026"
         backgroundImage={`${base}images/event.jpg`}
       >
-        <a
+        <motion.a
           href="http://forms.gle/dDMLL2XFuCEkPt1z5"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.registerButton}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
         >
           Register
-        </a>
+        </motion.a>
       </Hero>
 
       <section className={styles.infoSection}>
         <div className="container">
           <div className={styles.grid}>
-            <div className={styles.card}>
+            <motion.div
+              className={styles.card}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               <h2 className={styles.cardTitle}>Who Should Attend</h2>
               <p>
                 Our conference brings together educators, researchers, and
@@ -35,8 +44,14 @@ export default function Conference() {
                 individuals across disciplines including economics, finance,
                 computer science, law, energy, or policy.
               </p>
-            </div>
-            <div className={styles.card}>
+            </motion.div>
+            <motion.div
+              className={styles.card}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
               <h2 className={styles.cardTitle}>What to Expect</h2>
               <p>
                 Keynote presentations from leading Bitcoin researchers and
@@ -50,7 +65,7 @@ export default function Conference() {
                 Networking with colleagues who are developing Bitcoin curricula
                 nationwide.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

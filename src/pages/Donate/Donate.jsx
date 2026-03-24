@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import Hero from '../../components/Hero/Hero';
 import styles from './Donate.module.css';
 
@@ -11,22 +12,30 @@ export default function Donate() {
         subtitle="Your contribution helps advance Bitcoin research and education in higher learning"
         backgroundImage={`${base}images/hero.png`}
       >
-        <a
+        <motion.a
           href="https://pay.zaprite.com/pl_JCxJao3lKs"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.donateButton}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
         >
           Donate to BEI
-        </a>
+        </motion.a>
       </Hero>
 
       <section className={styles.infoSection}>
         <div className="container">
-          <p className={styles.text}>
+          <motion.p
+            className={styles.text}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             BEI is a 501(c)(3) tax-exempt nonprofit corporation. Your donation
             may be tax-deductible to the extent allowed by law.
-          </p>
+          </motion.p>
         </div>
       </section>
     </>

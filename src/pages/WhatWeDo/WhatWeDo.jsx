@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
 import Hero from '../../components/Hero/Hero';
-import Section from '../../components/Section/Section';
+import AnimatedSection from '../../components/AnimatedSection/AnimatedSection';
 import styles from './WhatWeDo.module.css';
 
 export default function WhatWeDo() {
@@ -10,7 +11,7 @@ export default function WhatWeDo() {
     <>
       <Hero title="What We Do" />
 
-      <Section
+      <AnimatedSection
         title="Integrate Bitcoin into Curriculum"
         image={`${base}images/whatwedo-1.jpg`}
         imageAlt="Bitcoin conference presentation"
@@ -25,9 +26,9 @@ export default function WhatWeDo() {
           <li>Homework exercises and exam questions</li>
           <li>Online lectures and videos</li>
         </ul>
-      </Section>
+      </AnimatedSection>
 
-      <Section
+      <AnimatedSection
         title="Research & Conferences"
         image={`${base}images/whatwedo-2.jpg`}
         imageAlt="Academic conference"
@@ -42,9 +43,9 @@ export default function WhatWeDo() {
           <li>Annual academic conference</li>
           <li>Call for papers</li>
         </ul>
-      </Section>
+      </AnimatedSection>
 
-      <Section title="Student Engagement">
+      <AnimatedSection title="Student Engagement">
         <p>
           We provide students with the resources and connections they need to
           deepen their understanding of Bitcoin.
@@ -54,17 +55,40 @@ export default function WhatWeDo() {
           <li>Reading lists</li>
           <li>Curriculum alignment</li>
         </ul>
-      </Section>
+      </AnimatedSection>
 
       <section className={styles.ctaSection}>
         <div className="container">
-          <h2 className={styles.ctaTitle}>Get in Touch</h2>
-          <p className={styles.ctaText}>
+          <motion.h2
+            className={styles.ctaTitle}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Get in Touch
+          </motion.h2>
+          <motion.p
+            className={styles.ctaText}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             Interested in bringing Bitcoin into your classroom or institution?
-          </p>
-          <Link to="/contact" className={styles.ctaButton}>
-            Contact Us
-          </Link>
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Link to="/contact" className={styles.ctaButton}>
+              Contact Us
+            </Link>
+          </motion.div>
         </div>
       </section>
     </>

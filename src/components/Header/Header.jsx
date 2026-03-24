@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import styles from './Header.module.css';
 
 const navLinks = [
@@ -15,7 +16,12 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className={styles.header}>
+    <motion.header
+      className={styles.header}
+      initial={{ y: -80 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className={`container ${styles.inner}`}>
         <Link to="/" className={styles.logo}>
           <img
@@ -37,28 +43,39 @@ export default function Header() {
         </button>
 
         <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>
-          {navLinks.map(({ to, label }) => (
-            <NavLink
+          {navLinks.map(({ to, label }, i) => (
+            <motion.div
               key={to}
-              to={to}
-              className={({ isActive }) =>
-                `${styles.navLink} ${isActive ? styles.active : ''}`
-              }
-              onClick={() => setMenuOpen(false)}
-              end={to === '/'}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + i * 0.05, duration: 0.4 }}
             >
-              {label}
-            </NavLink>
+              <NavLink
+                to={to}
+                className={({ isActive }) =>
+                  `${styles.navLink} ${isActive ? styles.active : ''}`
+                }
+                onClick={() => setMenuOpen(false)}
+                end={to === '/'}
+              >
+                {label}
+              </NavLink>
+            </motion.div>
           ))}
         </nav>
 
-        {menuOpen && (
-          <div
-            className={styles.backdrop}
-            onClick={() => setMenuOpen(false)}
-          />
-        )}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              className={styles.backdrop}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
+            />
+          )}
+        </AnimatePresence>
       </div>
-    </header>
+    </motion.header>
   );
 }

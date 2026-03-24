@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './themes/ThemeContext';
 import App from './App';
 import Home from './pages/Home/Home';
 import WhatWeDo from './pages/WhatWeDo/WhatWeDo';
@@ -13,16 +14,18 @@ import './styles/global.css';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HashRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<Home />} />
-          <Route path="what-we-do" element={<WhatWeDo />} />
-          <Route path="about" element={<About />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="conference" element={<Conference />} />
-          <Route path="donate" element={<Donate />} />
-        </Route>
-      </Routes>
+      <ThemeProvider>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<Home />} />
+            <Route path="what-we-do" element={<WhatWeDo />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="conference" element={<Conference />} />
+            <Route path="donate" element={<Donate />} />
+          </Route>
+        </Routes>
+      </ThemeProvider>
     </HashRouter>
   </StrictMode>
 );

@@ -1,15 +1,15 @@
 :root {
-  /* Colors */
-  --color-bg: #161616;
-  --color-bg-elevated: #1e1e1e;
-  --color-text: #f7f7f7;
-  --color-text-muted: #a0a0a0;
-  --color-accent: #f7931a;
-  --color-border: #333;
+  /* Colors — Warm Earth default */
+  --color-bg: #1c1714;
+  --color-bg-elevated: #252019;
+  --color-text: #f2ebe0;
+  --color-text-muted: #a0937e;
+  --color-accent: #c87533;
+  --color-border: #3a322a;
 
   /* Typography */
-  --font-heading: 'Fjalla One', sans-serif;
-  --font-body: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'Public Sans', sans-serif;
 
   /* Layout */
   --max-width: 1200px;
@@ -28,7 +28,7 @@
   /* Section rhythm */
   --section-padding: var(--space-3xl);
   --card-padding: var(--space-lg);
-  --card-radius: 8px;
+  --card-radius: 16px;
   --grid-gap: var(--space-lg);
 }
 
@@ -52,6 +52,7 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -102,4 +103,27 @@ img {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Theme-specific overrides for letter-spacing on headings */
+[data-theme="btcpolicy"] h1,
+[data-theme="btcpolicy"] h2,
+[data-theme="btcpolicy"] h3 {
+  letter-spacing: -0.3px;
+}
+
+[data-theme="brutalist"] h1,
+[data-theme="brutalist"] h2,
+[data-theme="brutalist"] h3 {
+  letter-spacing: -1px;
+}
+
+[data-theme="whitepaper"] a:hover {
+  color: var(--color-accent);
+}
+
+/* Brutalist selection color */
+[data-theme="brutalist"] ::selection {
+  background: var(--color-accent);
+  color: #000;
 }

@@ -1,5 +1,6 @@
+import { motion } from 'motion/react';
 import Hero from '../../components/Hero/Hero';
-import Section from '../../components/Section/Section';
+import AnimatedSection from '../../components/AnimatedSection/AnimatedSection';
 import TeamMember from '../../components/TeamMember/TeamMember';
 import { team } from '../../data/team';
 import styles from './About.module.css';
@@ -11,7 +12,7 @@ export default function About() {
     <>
       <Hero title="About Bitcoin Education Institute" />
 
-      <Section
+      <AnimatedSection
         image={`${base}images/about-1.jpg`}
         imageAlt="BEI event"
       >
@@ -21,9 +22,9 @@ export default function About() {
           shaping how future leaders, scholars, and builders engage with this
           transformative technology.
         </p>
-      </Section>
+      </AnimatedSection>
 
-      <Section
+      <AnimatedSection
         title="How BEI Works"
         image={`${base}images/about-2.jpg`}
         imageAlt="Bitcoin conference"
@@ -38,14 +39,30 @@ export default function About() {
           BEI is a Texas nonprofit corporation and a 501(c)(3) tax-exempt
           organization.
         </p>
-      </Section>
+      </AnimatedSection>
 
       <section className={styles.teamSection}>
         <div className="container">
-          <h2 className={styles.teamTitle}>Our Team</h2>
+          <motion.h2
+            className={styles.teamTitle}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Our Team
+          </motion.h2>
           <div className={styles.teamGrid}>
-            {team.map((member) => (
-              <TeamMember key={member.name} {...member} />
+            {team.map((member, i) => (
+              <motion.div
+                key={member.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+              >
+                <TeamMember {...member} />
+              </motion.div>
             ))}
           </div>
         </div>
