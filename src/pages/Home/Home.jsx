@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import BitcoinHero from '../../components/BitcoinHero/BitcoinHero';
+import Hero from '../../components/Hero/Hero';
 import AnimatedFocusCard from '../../components/AnimatedFocusCard/AnimatedFocusCard';
 import AnimatedSection from '../../components/AnimatedSection/AnimatedSection';
 import styles from './Home.module.css';
@@ -33,9 +33,10 @@ export default function Home() {
 
   return (
     <>
-      <BitcoinHero
+      <Hero
         title="Bitcoin Education Institute"
         subtitle="Advancing the Teaching and Research of Bitcoin"
+        backgroundImage={`${base}images/event.jpg`}
       >
         <motion.div
           whileHover={{ scale: 1.05 }}
@@ -45,7 +46,7 @@ export default function Home() {
             Learn More
           </Link>
         </motion.div>
-      </BitcoinHero>
+      </Hero>
 
       <section className={styles.focusSection}>
         <div className="container">

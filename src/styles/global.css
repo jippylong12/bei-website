@@ -1,11 +1,11 @@
 :root {
-  /* Colors — Warm Earth default */
-  --color-bg: #1c1714;
-  --color-bg-elevated: #252019;
-  --color-text: #f2ebe0;
-  --color-text-muted: #a0937e;
-  --color-accent: #c87533;
-  --color-border: #3a322a;
+  /* Colors — Midwest BTC default */
+  --color-bg: #0f1419;
+  --color-bg-elevated: #1a1f25;
+  --color-text: #f0f0f0;
+  --color-text-muted: #8a8a96;
+  --color-accent: #f7931a;
+  --color-border: #2a2a30;
 
   /* Typography */
   --font-heading: 'Syne', sans-serif;
