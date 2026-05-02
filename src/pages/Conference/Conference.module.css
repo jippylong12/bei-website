@@ -51,10 +51,6 @@
   margin-bottom: 0;
 }
 
-.teachingSection :global(section) {
-  padding-top: var(--space-lg);
-}
-
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;

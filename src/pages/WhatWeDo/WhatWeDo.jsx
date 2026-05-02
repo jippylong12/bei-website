@@ -13,8 +13,8 @@ export default function WhatWeDo() {
 
       <AnimatedSection
         title="Integrate Bitcoin into Curriculum"
-        image={`${base}images/whatwedo-1.jpg`}
-        imageAlt="Bitcoin conference presentation"
+        image={`${base}images/whatwedo-curriculum-dinner.jpg`}
+        imageAlt="Bitcoin educators gathered for dinner"
       >
         <p>
           We support faculty across disciplines with ready-to-use materials that

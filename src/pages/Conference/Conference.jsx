@@ -1,9 +1,6 @@
 import { motion } from 'motion/react';
 import BitcoinHero from '../../components/BitcoinHero/BitcoinHero';
-import AnimatedSection from '../../components/AnimatedSection/AnimatedSection';
 import styles from './Conference.module.css';
-
-const base = import.meta.env.BASE_URL;
 
 export default function Conference() {
   return (
@@ -59,8 +56,8 @@ export default function Conference() {
                 educators.
               </p>
               <p>
-                Teaching and research talks showcasing innovative approaches to
-                Bitcoin education.
+                Research presentations showcasing rigorous approaches to the
+                academic study of Bitcoin.
               </p>
               <p>
                 Networking with colleagues who are developing Bitcoin curricula
@@ -70,21 +67,6 @@ export default function Conference() {
           </div>
         </div>
       </section>
-
-      <div className={styles.teachingSection}>
-        <AnimatedSection
-          title="Teaching Talks"
-          image={`${base}images/dustin-watchman-teaching.png`}
-          imageAlt="Dustin Watchman teaching Bitcoin concepts in a classroom"
-          reverse
-        >
-          <p>
-            Hear from educators like Dustin Watchman who are bringing Bitcoin
-            into classrooms around the world. Teaching Talks spotlight innovative
-            methods for making Bitcoin accessible to students of all backgrounds.
-          </p>
-        </AnimatedSection>
-      </div>
     </>
   );
 }
