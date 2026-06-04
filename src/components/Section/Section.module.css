@@ -36,8 +36,7 @@
 .title {
   font-size: 1.75rem;
   margin-bottom: var(--space-md);
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0;
 }
 
 .content p {

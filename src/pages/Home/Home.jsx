@@ -37,13 +37,14 @@ export default function Home() {
         title="Bitcoin Education Institute"
         subtitle="Advancing the Teaching and Research of Bitcoin"
         backgroundImage={`${base}images/event.jpg`}
+        backgroundPosition="center 42%"
       >
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.97 }}
         >
           <Link to="/what-we-do" className={styles.ctaButton}>
-            Learn More
+            Explore Academic Programs
           </Link>
         </motion.div>
       </Hero>
@@ -57,7 +58,7 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            What BEI Does
+            Institutional Focus
           </motion.h2>
           <div className={styles.grid}>
             {focusAreas.map((area, i) => (
@@ -84,7 +85,7 @@ export default function Home() {
         </p>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
           <Link to="/what-we-do" className={styles.ctaButton}>
-            View Course Details
+            View Course Support
           </Link>
         </motion.div>
       </AnimatedSection>
@@ -107,10 +108,10 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            Bitcoin has reshaped finance, energy, and computing — yet remains
-            underrepresented in education. BEI exists to close that gap, ensuring
-            future leaders and scholars have the tools to engage with this
-            transformative technology.
+            Bitcoin now sits at the intersection of money, computing, energy,
+            law, and public policy. BEI helps universities approach that subject
+            with the seriousness, context, and source material expected of
+            durable academic work.
           </motion.p>
         </div>
       </section>

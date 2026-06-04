@@ -5,9 +5,8 @@
 
 .teamTitle {
   font-size: 1.75rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-align: center;
+  letter-spacing: 0;
+  text-align: left;
   margin-bottom: var(--space-2xl);
 }
 

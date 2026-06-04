@@ -10,24 +10,27 @@ export default function About() {
 
   return (
     <>
-      <Hero title="About Bitcoin Education Institute" />
+      <Hero
+        title="About Bitcoin Education Institute"
+        subtitle="A nonprofit institution supporting Bitcoin teaching, research, and academic exchange."
+      />
 
       <AnimatedSection
         image={`${base}images/about-1.jpg`}
-        imageAlt="BEI event"
+        imageAlt="Student at the Cypherpunks exhibit"
       >
         <p>
           The Bitcoin Education Institute works to ensure Bitcoin is studied,
           taught, and understood at the highest levels of academic inquiry —
           shaping how future leaders, scholars, and builders engage with this
-          transformative technology.
+          interdisciplinary field.
         </p>
       </AnimatedSection>
 
       <AnimatedSection
         title="How BEI Works"
         image={`${base}images/about-2.jpg`}
-        imageAlt="Bitcoin conference"
+        imageAlt="Bitcoin conference lecture on Bitcoin Script"
         reverse
       >
         <ul>

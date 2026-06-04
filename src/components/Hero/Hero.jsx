@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import styles from './Hero.module.css';
 
-export default function Hero({ title, subtitle, backgroundImage, children }) {
+export default function Hero({ title, subtitle, backgroundImage, backgroundPosition = 'center', children }) {
   const hasBackground = !!backgroundImage;
   const heroClass = `${styles.hero} ${hasBackground ? styles.heroFull : styles.heroCompact}`;
 
@@ -10,8 +10,9 @@ export default function Hero({ title, subtitle, backgroundImage, children }) {
       className={heroClass}
       style={{
         backgroundImage: hasBackground
-          ? `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(${backgroundImage})`
+          ? `linear-gradient(90deg, rgba(1, 9, 28, 0.9), rgba(1, 9, 28, 0.62)), url(${backgroundImage})`
           : undefined,
+        backgroundPosition,
       }}
     >
       <div className={`container ${styles.content}`}>

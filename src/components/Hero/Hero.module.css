@@ -1,10 +1,9 @@
 .hero {
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
+  text-align: left;
   background-size: cover;
-  background-position: center;
   background-color: var(--color-bg);
   padding: var(--space-2xl) 0;
 }
@@ -21,23 +20,27 @@
 }
 
 .content {
-  max-width: 800px;
+  max-width: 760px;
 }
 
 .title {
   font-size: clamp(2rem, 5vw, 3.5rem);
-  text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 0;
   margin-bottom: var(--space-md);
 }
 
 .subtitle {
   font-size: clamp(1rem, 2vw, 1.25rem);
   color: var(--color-text-muted);
-  font-weight: 300;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 0;
   line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .heroFull {
+    min-height: 56vh;
+  }
 }
 
 .cta {

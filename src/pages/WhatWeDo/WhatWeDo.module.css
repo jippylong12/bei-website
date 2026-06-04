@@ -6,8 +6,7 @@
 
 .ctaTitle {
   font-size: 1.75rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0;
   margin-bottom: var(--space-sm);
 }
 
@@ -21,10 +20,9 @@
   display: inline-block;
   padding: 0.75rem 2rem;
   background: var(--color-accent);
-  color: #000 !important;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: var(--bei-navy) !important;
+  font-weight: 650;
+  letter-spacing: 0;
   border-radius: 4px;
   font-size: 0.9rem;
   transition: opacity 0.2s ease;
@@ -32,5 +30,5 @@
 
 .ctaButton:hover {
   opacity: 0.85;
-  color: #000 !important;
+  color: var(--bei-navy) !important;
 }

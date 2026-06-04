@@ -14,9 +14,9 @@
 .emailLink {
   display: inline-block;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 650;
   font-family: var(--font-heading);
-  letter-spacing: 2px;
+  letter-spacing: 0;
   color: var(--color-accent) !important;
   border: 2px solid var(--color-accent);
   padding: 0.75rem 2rem;
@@ -26,5 +26,5 @@
 
 .emailLink:hover {
   background: var(--color-accent);
-  color: #000 !important;
+  color: var(--bei-navy) !important;
 }

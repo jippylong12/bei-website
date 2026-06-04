@@ -25,19 +25,7 @@
 .title {
   font-size: 1.15rem;
   margin-bottom: var(--space-sm);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-[data-theme="btcpolicy"] .title {
-  text-transform: none;
   letter-spacing: 0;
-}
-
-[data-theme="brutalist"] .title {
-  font-size: 1.4rem;
-  letter-spacing: -0.5px;
-  text-transform: none;
 }
 
 .description {

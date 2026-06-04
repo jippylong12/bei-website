@@ -1,15 +1,11 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
-import { useTheme } from '../../themes/ThemeContext';
 import styles from './AnimatedSection.module.css';
 
 export default function AnimatedSection({ title, children, image, imageAlt, reverse, id }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const { theme } = useTheme();
-
-  const isKinetic = theme.id === 'kinetic';
-  const duration = isKinetic ? 0.9 : 0.6;
+  const duration = 0.6;
 
   return (
     <section className={styles.section} id={id} ref={ref}>

@@ -20,7 +20,7 @@
   height: 140px;
   border-radius: 50%;
   background: var(--color-accent);
-  color: #000;
+  color: var(--bei-navy);
   display: flex;
   align-items: center;
   justify-content: center;

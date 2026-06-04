@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import ThemePicker from './components/ThemePicker/ThemePicker';
 
 export default function App() {
   const { pathname } = useLocation();
@@ -27,7 +26,6 @@ export default function App() {
         </motion.main>
       </AnimatePresence>
       <Footer />
-      {/* <ThemePicker /> */}
     </>
   );
 }

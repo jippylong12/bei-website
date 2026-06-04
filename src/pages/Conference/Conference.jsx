@@ -1,13 +1,17 @@
 import { motion } from 'motion/react';
-import BitcoinHero from '../../components/BitcoinHero/BitcoinHero';
+import Hero from '../../components/Hero/Hero';
 import styles from './Conference.module.css';
 
 export default function Conference() {
+  const base = import.meta.env.BASE_URL;
+
   return (
     <>
-      <BitcoinHero
+      <Hero
         title="Annual Bitcoin Education Institute Conference 2026"
-        subtitle="Join us for the premier Bitcoin education event"
+        subtitle="A formal gathering for Bitcoin educators, researchers, and interdisciplinary academic work."
+        backgroundImage={`${base}images/about-2.jpg`}
+        backgroundPosition="center 36%"
       >
         <motion.a
           href="http://forms.gle/dDMLL2XFuCEkPt1z5"
@@ -19,7 +23,7 @@ export default function Conference() {
         >
           Register
         </motion.a>
-      </BitcoinHero>
+      </Hero>
 
       <section className={styles.infoSection}>
         <div className="container">

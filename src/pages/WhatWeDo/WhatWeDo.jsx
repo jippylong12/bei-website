@@ -9,7 +9,10 @@ export default function WhatWeDo() {
 
   return (
     <>
-      <Hero title="What We Do" />
+      <Hero
+        title="What We Do"
+        subtitle="Curriculum, faculty support, research, and convening for serious Bitcoin scholarship."
+      />
 
       <AnimatedSection
         title="Integrate Bitcoin into Curriculum"
@@ -18,7 +21,7 @@ export default function WhatWeDo() {
       >
         <p>
           We support faculty across disciplines with ready-to-use materials that
-          make it easy to bring Bitcoin into existing courses.
+          help Bitcoin become part of rigorous existing courses.
         </p>
         <ul>
           <li>Lecture materials and slides</li>
@@ -40,7 +43,7 @@ export default function WhatWeDo() {
         </p>
         <ul>
           <li>Research grants</li>
-          <li>Annual academic conference</li>
+          <li>Annual academic conferences and convenings</li>
           <li>Call for papers</li>
         </ul>
       </AnimatedSection>
@@ -75,7 +78,8 @@ export default function WhatWeDo() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Interested in bringing Bitcoin into your classroom or institution?
+            Interested in bringing serious Bitcoin scholarship into your
+            classroom or institution?
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -4,9 +4,8 @@
 
 .sectionTitle {
   font-size: 1.75rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-align: center;
+  letter-spacing: 0;
+  text-align: left;
   margin-bottom: var(--space-2xl);
 }
 
@@ -21,10 +20,9 @@
   margin-top: var(--space-lg);
   padding: 0.75rem 2rem;
   background: var(--color-accent);
-  color: #000 !important;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: var(--bei-navy) !important;
+  font-weight: 650;
+  letter-spacing: 0;
   border-radius: 4px;
   font-size: 0.9rem;
   transition: opacity 0.2s ease;
@@ -32,18 +30,16 @@
 
 .ctaButton:hover {
   opacity: 0.85;
-  color: #000 !important;
+  color: var(--bei-navy) !important;
 }
 
 .whySection {
   padding: var(--section-padding) 0;
-  text-align: center;
   border-top: 1px solid var(--color-border);
 }
 
 .whyText {
-  max-width: 700px;
-  margin: 0 auto;
+  max-width: 780px;
   color: var(--color-text-muted);
   font-size: 1.15rem;
   line-height: 1.8;

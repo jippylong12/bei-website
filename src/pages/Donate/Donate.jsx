@@ -9,8 +9,9 @@ export default function Donate() {
     <>
       <Hero
         title="Support Bitcoin Education"
-        subtitle="Your contribution helps advance Bitcoin research and education in higher learning"
+        subtitle="Your contribution supports nonprofit academic programs, research, and curriculum development."
         backgroundImage={`${base}images/hero.png`}
+        backgroundPosition="center"
       >
         <motion.a
           href="https://pay.zaprite.com/pl_JCxJao3lKs"

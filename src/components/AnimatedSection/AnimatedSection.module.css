@@ -26,6 +26,7 @@
   border-radius: var(--card-radius);
   object-fit: cover;
   aspect-ratio: 4 / 3;
+  border: 1px solid var(--color-border);
 }
 
 .content {
@@ -36,25 +37,14 @@
 .title {
   font-size: 1.75rem;
   margin-bottom: var(--space-md);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-[data-theme="btcpolicy"] .title {
-  text-transform: none;
   letter-spacing: 0;
-}
-
-[data-theme="brutalist"] .title {
-  font-size: 2.5rem;
-  letter-spacing: -1px;
-  text-transform: none;
 }
 
 .content p {
   color: var(--color-text-muted);
   margin-bottom: var(--space-sm);
   line-height: 1.8;
+  font-size: 1.02rem;
 }
 
 .content ul {

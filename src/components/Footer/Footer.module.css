@@ -1,15 +1,35 @@
 .footer {
   border-top: 1px solid var(--color-border);
-  padding: var(--space-2xl) 0;
+  padding: var(--space-2xl) 0 var(--space-xl);
   margin-top: var(--section-padding);
-  transition: border-color 0.4s ease;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--bei-black) 92%, var(--bei-navy)), var(--bei-navy));
 }
 
 .inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(260px, 1.5fr) repeat(2, minmax(160px, 1fr));
   gap: var(--space-lg);
+  align-items: start;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 380px;
+}
+
+.identity img {
+  width: 188px;
+  min-width: 160px;
+  height: auto;
+}
+
+.identity p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
 .col {
@@ -34,26 +54,29 @@
 
 .donateLink {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
+  margin-top: var(--space-xs);
+  padding: 0.7rem 1.15rem;
   background: var(--color-accent);
-  color: #000 !important;
-  font-weight: 700;
+  color: var(--bei-navy) !important;
+  font-weight: 650;
   border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0;
   font-size: 0.85rem;
   transition: opacity 0.2s ease;
 }
 
 .donateLink:hover {
   opacity: 0.85;
-  color: #000 !important;
+  color: var(--bei-navy) !important;
 }
 
 @media (max-width: 768px) {
   .inner {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .identity img {
+    width: 170px;
   }
 }

@@ -2,6 +2,8 @@ import { motion } from 'motion/react';
 import styles from './Footer.module.css';
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+
   return (
     <motion.footer
       className={styles.footer}
@@ -11,17 +13,27 @@ export default function Footer() {
       transition={{ duration: 0.6 }}
     >
       <div className={`container ${styles.inner}`}>
-        <div className={styles.col}>
-          <p>&copy; {new Date().getFullYear()} Bitcoin Education Institute</p>
-          <p>All Rights Reserved.</p>
-        </div>
-        <div className={styles.col}>
-          <a href="mailto:info@btcedu.org">info@btcedu.org</a>
-          <p className={styles.status}>
-            BEI is a 501(c)(3) tax-exempt nonprofit corporation.
+        <div className={styles.identity}>
+          <img
+            src={`${import.meta.env.BASE_URL}brand/primary-horizontal-logo/BEI_Wordmark_White.svg`}
+            alt="Bitcoin Education Institute"
+            width="188"
+            height="70"
+          />
+          <p>
+            Advancing rigorous Bitcoin teaching, research, and academic
+            convening.
           </p>
         </div>
         <div className={styles.col}>
+          <p>&copy; {year} Bitcoin Education Institute</p>
+          <p>All Rights Reserved.</p>
+          <p className={styles.status}>
+            501(c)(3) tax-exempt nonprofit corporation.
+          </p>
+        </div>
+        <div className={styles.col}>
+          <a href="mailto:info@btcedu.org">info@btcedu.org</a>
           <motion.a
             href="https://pay.zaprite.com/pl_JCxJao3lKs"
             target="_blank"

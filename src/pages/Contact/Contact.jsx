@@ -5,7 +5,10 @@ import styles from './Contact.module.css';
 export default function Contact() {
   return (
     <>
-      <Hero title="Contact Us" subtitle="Drop us a line!" />
+      <Hero
+        title="Contact Us"
+        subtitle="For faculty partnerships, research support, curriculum questions, and institutional inquiries."
+      />
 
       <section className={styles.contactSection}>
         <div className="container">

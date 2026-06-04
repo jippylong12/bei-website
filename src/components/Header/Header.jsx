@@ -25,9 +25,10 @@ export default function Header() {
       <div className={`container ${styles.inner}`}>
         <Link to="/" className={styles.logo}>
           <img
-            src={`${import.meta.env.BASE_URL}images/logo.png`}
+            src={`${import.meta.env.BASE_URL}brand/primary-horizontal-logo/BEI_Wordmark_White.svg`}
             alt="Bitcoin Education Institute"
-            height="60"
+            width="180"
+            height="67"
           />
         </Link>
 
