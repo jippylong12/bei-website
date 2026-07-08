@@ -17,15 +17,15 @@
 .logo {
   display: flex;
   align-items: center;
-  min-width: 160px;
+  min-width: 265px;
   padding: 0.5rem 0.75rem 0.5rem 0;
 }
 
 .logo img {
-  width: 180px;
-  min-width: 160px;
+  width: 265px;
+  min-width: 265px;
   height: auto;
-  max-height: 67px;
+  max-height: 98px;
   object-fit: contain;
 }
 
@@ -140,8 +140,13 @@
     border-left: 1px solid var(--color-border);
   }
 
+  .logo {
+    min-width: 224px;
+  }
+
   .logo img {
-    width: 168px;
+    width: 224px;
+    min-width: 224px;
   }
 
   .navOpen {

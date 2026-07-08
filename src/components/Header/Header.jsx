@@ -27,8 +27,8 @@ export default function Header() {
           <img
             src={`${import.meta.env.BASE_URL}brand/primary-horizontal-logo/BEI_Wordmark_White.svg`}
             alt="Bitcoin Education Institute"
-            width="180"
-            height="67"
+            width="265"
+            height="98"
           />
         </Link>
 

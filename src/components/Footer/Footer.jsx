@@ -17,8 +17,8 @@ export default function Footer() {
           <img
             src={`${import.meta.env.BASE_URL}brand/primary-horizontal-logo/BEI_Wordmark_White.svg`}
             alt="Bitcoin Education Institute"
-            width="188"
-            height="70"
+            width="265"
+            height="98"
           />
           <p>
             Advancing rigorous Bitcoin teaching, research, and academic

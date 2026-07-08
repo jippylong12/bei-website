@@ -3,15 +3,11 @@ import Hero from '../../components/Hero/Hero';
 import styles from './Conference.module.css';
 
 export default function Conference() {
-  const base = import.meta.env.BASE_URL;
-
   return (
     <>
       <Hero
         title="Annual Bitcoin Education Institute Conference 2026"
         subtitle="A formal gathering for Bitcoin educators, researchers, and interdisciplinary academic work."
-        backgroundImage={`${base}images/about-2.jpg`}
-        backgroundPosition="center 36%"
       >
         <motion.a
           href="http://forms.gle/dDMLL2XFuCEkPt1z5"
