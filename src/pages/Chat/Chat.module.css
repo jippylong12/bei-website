@@ -1,0 +1,499 @@
+/* Layout ------------------------------------------------------------------ */
+
+.page {
+  display: flex;
+  justify-content: center;
+}
+
+.chatFrame {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 860px;
+  height: calc(100dvh - var(--header-height));
+  padding: 0 var(--space-md);
+}
+
+/* Empty state --------------------------------------------------------------*/
+
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-md);
+  padding: var(--space-xl) 0;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  max-width: 34rem;
+}
+
+.starters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  width: 100%;
+  max-width: 40rem;
+}
+
+.starter {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: var(--space-sm);
+  cursor: pointer;
+  line-height: 1.45;
+  transition: border-color 0.2s ease;
+}
+
+.starter:hover {
+  border-color: var(--color-accent);
+}
+
+/* Toolbar ------------------------------------------------------------------*/
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.toolbarTitle {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+}
+
+.newChat {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.newChat:hover:not(:disabled) {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.newChat:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Transcript ----------------------------------------------------------------*/
+
+.messageList {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-md) 0;
+}
+
+.messageColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.userMessage {
+  align-self: flex-end;
+  max-width: 85%;
+  background: color-mix(in srgb, var(--bei-gold) 14%, var(--bei-navy));
+  border: 1px solid color-mix(in srgb, var(--bei-gold) 35%, transparent);
+  border-radius: var(--card-radius);
+  padding: var(--space-sm) var(--space-md);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.assistantMessage {
+  align-self: flex-start;
+  width: 100%;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: var(--space-md);
+}
+
+.refusedMessage {
+  border-style: dashed;
+}
+
+/* Markdown body -------------------------------------------------------------*/
+
+.markdown {
+  color: var(--bei-cream);
+  overflow-wrap: break-word;
+}
+
+.markdown p,
+.markdown ul,
+.markdown ol,
+.markdown table,
+.markdown blockquote {
+  margin-bottom: 0.75em;
+}
+
+.markdown :last-child {
+  margin-bottom: 0;
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: 1.4em;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  font-size: 1.05rem;
+  margin: 0.9em 0 0.45em;
+}
+
+.markdown code {
+  font-size: 0.9em;
+  background: color-mix(in srgb, var(--bei-cream) 10%, transparent);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.markdown pre {
+  overflow-x: auto;
+  background: color-mix(in srgb, var(--bei-cream) 8%, transparent);
+  border-radius: var(--card-radius);
+  padding: var(--space-sm);
+  margin-bottom: 0.75em;
+}
+
+.markdown pre code {
+  background: none;
+  padding: 0;
+}
+
+.markdown table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid var(--color-border);
+  padding: 0.35em 0.7em;
+  text-align: left;
+}
+
+.markdown blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: var(--space-sm);
+  color: var(--color-text-muted);
+}
+
+/* Citation chips -------------------------------------------------------------*/
+
+.citationChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: super;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.25rem;
+  margin: 0 0.1rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--bei-light-gold);
+  background: color-mix(in srgb, var(--bei-gold) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bei-gold) 45%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.citationChip:hover {
+  background: color-mix(in srgb, var(--bei-gold) 32%, transparent);
+}
+
+/* Status / streaming ----------------------------------------------------------*/
+
+.statusLine {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.statusPulse {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--color-accent);
+  animation: blink 1s steps(2) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.errorLine {
+  color: var(--color-accent-subtle);
+  font-size: 0.9rem;
+}
+
+.stoppedLine,
+.refusalNote {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-top: var(--space-xs);
+}
+
+/* Sources ----------------------------------------------------------------------*/
+
+.sourcesPanel {
+  margin-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-xs);
+}
+
+.sourcesToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  transition: color 0.2s ease;
+}
+
+.sourcesToggle:hover {
+  color: var(--color-accent);
+}
+
+.sourcesChevron {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 1rem;
+}
+
+.sourcesChevronOpen {
+  transform: rotate(90deg);
+}
+
+.sourceList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.sourceItem {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-xs);
+  border-radius: var(--card-radius);
+  transition: background 0.3s ease;
+}
+
+.sourceActive {
+  background: color-mix(in srgb, var(--bei-gold) 10%, transparent);
+}
+
+.sourceIndex {
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.sourceIndexCited {
+  color: var(--bei-light-gold);
+  border-color: color-mix(in srgb, var(--bei-gold) 55%, transparent);
+}
+
+.sourceBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sourceTitle {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.sourceMeta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.sourceSnippet {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.scoreBar {
+  width: 7rem;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--bei-cream) 14%, transparent);
+  overflow: hidden;
+  margin-top: 0.15rem;
+}
+
+.scoreFill {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+}
+
+/* Composer -----------------------------------------------------------------------*/
+
+.composerArea {
+  flex: none;
+  padding: var(--space-sm) 0 var(--space-sm);
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-xs);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: var(--space-xs);
+  transition: border-color 0.2s ease;
+}
+
+.composer:focus-within {
+  border-color: var(--color-accent);
+}
+
+.input {
+  flex: 1;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 0.45rem 0.6rem;
+  max-height: 160px;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.sendButton,
+.stopButton {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--card-radius);
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.sendButton {
+  color: var(--bei-navy);
+  background: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+.sendButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.stopButton {
+  color: var(--color-text);
+  background: none;
+  border: 1px solid var(--color-border);
+}
+
+.stopButton:hover {
+  border-color: var(--color-accent);
+}
+
+.disclaimer {
+  margin-top: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* Mobile -------------------------------------------------------------------------*/
+
+@media (max-width: 640px) {
+  .starters {
+    grid-template-columns: 1fr;
+  }
+
+  .userMessage {
+    max-width: 100%;
+  }
+
+  .assistantMessage {
+    padding: var(--space-sm);
+  }
+}

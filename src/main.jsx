@@ -8,6 +8,7 @@ import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
 import Conference from './pages/Conference/Conference';
 import Donate from './pages/Donate/Donate';
+import ChatLazy from './pages/Chat/ChatLazy';
 import './styles/global.css';
 
 createRoot(document.getElementById('root')).render(
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="contact" element={<Contact />} />
           <Route path="conference" element={<Conference />} />
           <Route path="donate" element={<Donate />} />
+          <Route path="research" element={<ChatLazy />} />
         </Route>
       </Routes>
     </HashRouter>
