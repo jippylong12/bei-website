@@ -10,6 +10,7 @@ const navLinks = [
   { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
   { to: '/conference', label: 'Conference' },
+  { to: '/research', label: 'Research Chat' },
 ];
 
 export default function Header() {

@@ -51,6 +51,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* clip (not hidden: that would break position:sticky) so the off-canvas
+     mobile menu parked at right:-100% can't widen the page scroll area */
+  overflow-x: clip;
 }
 
 body {
