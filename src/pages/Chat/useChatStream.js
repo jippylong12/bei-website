@@ -63,9 +63,10 @@ export default function useChatStream() {
   }, []);
 
   const send = useCallback(
-    async (text) => {
+    async (text, opts = {}) => {
       const question = text.trim();
       if (!question || isStreaming) return;
+      const mode = opts.deep ? 'deep' : 'quick';
 
       const history = messages
         .filter((m) => m.content)
@@ -80,6 +81,7 @@ export default function useChatStream() {
         content: '',
         status: 'streaming',
         statusText: 'Connecting…',
+        mode,
         sources: [],
         citationsUsed: [],
         confidence: null,
@@ -96,7 +98,7 @@ export default function useChatStream() {
         const res = await fetch(`${API_BASE}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: question, history }),
+          body: JSON.stringify({ message: question, history, mode }),
           signal: controller.signal,
         });
 
@@ -122,10 +124,14 @@ export default function useChatStream() {
               content: m.content + (data.text || ''),
               statusText: null,
             }));
+          } else if (event === 'followups') {
+            patchMessage(assistantId, { followups: data.questions || [] });
           } else if (event === 'done') {
             patchMessage(assistantId, {
               status: 'done',
               statusText: null,
+              turnId: data.turn_id || null,
+              nSearches: data.n_searches || 1,
               citationsUsed: data.citations_used || [],
               confidence: data.confidence,
               refused: !!data.refused,
@@ -166,11 +172,33 @@ export default function useChatStream() {
 
   const stop = useCallback(() => abortRef.current?.abort(), []);
 
+  // Record a 👍/👎 on an answer. Optimistically marks the message; the POST is
+  // fire-and-forget (a failed feedback write must never disrupt the chat).
+  const sendFeedback = useCallback(
+    (id, rating) => {
+      let turnId = null;
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m.id !== id) return m;
+          turnId = m.turnId;
+          return { ...m, feedback: rating };
+        })
+      );
+      if (!turnId) return;
+      fetch(`${API_BASE}/api/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ turn_id: turnId, rating }),
+      }).catch(() => {});
+    },
+    []
+  );
+
   const reset = useCallback(() => {
     abortRef.current?.abort();
     clearMessages();
     setMessages([]);
   }, []);
 
-  return { messages, isStreaming, send, stop, reset };
+  return { messages, isStreaming, send, stop, reset, sendFeedback };
 }

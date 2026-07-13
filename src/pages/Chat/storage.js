@@ -37,3 +37,30 @@ export function clearMessages() {
     // ignore
   }
 }
+
+// Download the conversation as a Markdown file, including cited sources.
+export function exportTranscript(messages) {
+  const lines = ['# BEI Research Chat transcript', ''];
+  for (const m of messages) {
+    if (m.role === 'user') {
+      lines.push(`## Q: ${m.content}`, '');
+    } else if (m.content) {
+      lines.push(m.content, '');
+      if (m.sources?.length) {
+        lines.push('**Sources:**');
+        for (const s of m.sources) {
+          const bits = [s.title || s.filename, s.authors, s.year].filter(Boolean).join(', ');
+          lines.push(`- [${s.index}] ${bits}${s.url ? ` — ${s.url}` : ''}`);
+        }
+        lines.push('');
+      }
+    }
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'bei-research-chat.md';
+  a.click();
+  URL.revokeObjectURL(url);
+}

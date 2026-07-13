@@ -73,6 +73,61 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+.toolbarActions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.corpusNote {
+  margin-top: var(--space-sm);
+  max-width: 40rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Suggested follow-ups ---------------------------------------------------------*/
+
+.followups {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.followupsLabel {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.followupChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.followupChip {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  text-align: left;
+  color: var(--color-text);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.followupChip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent-subtle);
+}
+
 .toolbarTitle {
   font-family: var(--font-heading);
   font-size: 1.05rem;
@@ -210,6 +265,17 @@
   color: var(--color-text-muted);
 }
 
+/* KaTeX math: inherit the cream text color; let display math scroll on overflow */
+.markdown :global(.katex) {
+  color: var(--bei-cream);
+}
+
+.markdown :global(.katex-display) {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
 /* Citation chips -------------------------------------------------------------*/
 
 .citationChip {
@@ -230,6 +296,7 @@
   border: 1px solid color-mix(in srgb, var(--bei-gold) 45%, transparent);
   border-radius: 999px;
   cursor: pointer;
+  text-decoration: none;
   transition: background 0.15s ease;
 }
 
@@ -284,6 +351,14 @@
   color: var(--color-text-muted);
   font-size: 0.85rem;
   margin-top: var(--space-xs);
+}
+
+.deepMeta {
+  margin-top: var(--space-sm);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent-subtle);
 }
 
 /* Sources ----------------------------------------------------------------------*/
@@ -374,6 +449,67 @@
   line-height: 1.35;
 }
 
+.sourceTitleLink {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.sourceTitleLink:hover {
+  color: var(--color-accent);
+  border-bottom-color: color-mix(in srgb, var(--bei-gold) 45%, transparent);
+}
+
+.sourceLinkIcon {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--color-accent-subtle);
+  white-space: nowrap;
+}
+
+/* Answer actions (feedback + copy) --------------------------------------------*/
+
+.answerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.actionBtn {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.actionBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.actionActive {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--bei-gold) 12%, transparent);
+}
+
+.feedbackThanks {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-left: var(--space-xs);
+}
+
 .sourceMeta {
   font-size: 0.8rem;
   color: var(--color-text-muted);
@@ -401,6 +537,12 @@
 }
 
 /* Composer -----------------------------------------------------------------------*/
+
+.composerCentered {
+  width: 100%;
+  max-width: 40rem;
+  margin-top: var(--space-xs);
+}
 
 .composerArea {
   flex: none;
@@ -440,6 +582,38 @@
 
 .input::placeholder {
   color: var(--color-text-muted);
+}
+
+.deepToggle {
+  flex: none;
+  align-self: flex-end;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  margin: 0.15rem 0 0.15rem 0.15rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.deepToggle:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+.deepToggleOn {
+  color: var(--bei-navy);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.deepToggle:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .sendButton,

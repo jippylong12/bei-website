@@ -2,7 +2,15 @@ import styles from './Chat.module.css';
 
 function formatPages(s) {
   if (s.page_start == null) return null;
-  return s.page_start === s.page_end ? `p. ${s.page_start}` : `pp. ${s.page_start}–${s.page_end}`;
+  return s.page_start === s.page_end
+    ? `p. ${s.page_start}`
+    : `pp. ${s.page_start}–${s.page_end}`;
+}
+
+// The API returns absolute publication URLs: a direct DOI (doi.org) where one
+// was resolved, else a Google Scholar search that lands on the publication.
+function sourceHref(s) {
+  return s.url || null;
 }
 
 export default function SourcesPanel({ sources, citationsUsed, open, onToggle, activeSource }) {
@@ -30,7 +38,30 @@ export default function SourcesPanel({ sources, citationsUsed, open, onToggle, a
                   {s.index}
                 </span>
                 <div className={styles.sourceBody}>
-                  <span className={styles.sourceTitle}>{s.title || s.filename}</span>
+                  {(() => {
+                    const href = sourceHref(s);
+                    const label = s.title || s.filename;
+                    return href ? (
+                      <a
+                        className={styles.sourceTitleLink}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={
+                          s.link_type === 'publication'
+                            ? 'Open the publication'
+                            : 'Find this paper'
+                        }
+                      >
+                        {label}
+                        <span className={styles.sourceLinkIcon} aria-hidden="true">
+                          {' ↗'}
+                        </span>
+                      </a>
+                    ) : (
+                      <span className={styles.sourceTitle}>{label}</span>
+                    );
+                  })()}
                   <span className={styles.sourceMeta}>
                     {[s.authors, s.year, s.section ? `§ ${s.section}` : null, pages]
                       .filter(Boolean)

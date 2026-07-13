@@ -3,7 +3,7 @@ import styles from './Chat.module.css';
 
 const MAX_CHARS = 2000;
 
-export default function Composer({ onSend, onStop, isStreaming }) {
+export default function Composer({ onSend, onStop, isStreaming, deep, onToggleDeep, autoFocus }) {
   const [text, setText] = useState('');
   const textareaRef = useRef(null);
 
@@ -32,15 +32,26 @@ export default function Composer({ onSend, onStop, isStreaming }) {
 
   return (
     <div className={styles.composer}>
+      <button
+        type="button"
+        className={`${styles.deepToggle} ${deep ? styles.deepToggleOn : ''}`}
+        onClick={onToggleDeep}
+        disabled={isStreaming}
+        title="Deep research: plans multiple corpus searches and synthesizes a broader evidence pool (slower, more thorough)"
+        aria-pressed={deep}
+      >
+        Deep
+      </button>
       <textarea
         ref={textareaRef}
         className={styles.input}
         value={text}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        placeholder="Ask about the research — e.g. selfish mining, energy use, volatility…"
+        placeholder="Ask a question about the research…"
         rows={1}
         aria-label="Your question"
+        autoFocus={autoFocus}
       />
       {isStreaming ? (
         <button type="button" className={styles.stopButton} onClick={onStop}>
