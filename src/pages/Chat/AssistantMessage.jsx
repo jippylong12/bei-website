@@ -18,7 +18,7 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
   const [copied, setCopied] = useState(false);
 
   const { content, status, statusText, sources, citationsUsed, refused,
-    errorMessage, feedback, followups } = message;
+    errorMessage, feedback, followups, mode, nSearches } = message;
   const processed = useMemo(() => toCitationLinks(content || ''), [content]);
 
   const openSource = (index) => {
@@ -29,11 +29,34 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
     });
   };
 
+  // index -> {url, title} so a [n] chip can link straight to the paper online
+  const sourceByIndex = useMemo(() => {
+    const m = {};
+    for (const s of sources || []) m[s.index] = s;
+    return m;
+  }, [sources]);
+
   const components = useMemo(
     () => ({
       a({ href, children }) {
         if (href?.startsWith('#src-')) {
           const n = Number(href.slice(5));
+          const src = sourceByIndex[n];
+          if (src?.url) {
+            // chip links to the paper online; title tooltip names it
+            return (
+              <a
+                className={styles.citationChip}
+                href={src.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={src.title || src.filename || `Source ${n}`}
+                aria-label={`Open source ${n}: ${src.title || 'paper'}`}
+              >
+                {n}
+              </a>
+            );
+          }
           return (
             <button
               type="button"
@@ -52,7 +75,7 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
         );
       },
     }),
-    []
+    [sourceByIndex]
   );
 
   return (
@@ -83,6 +106,12 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
         <p className={styles.refusalNote}>
           The corpus did not contain enough evidence to answer this — the assistant only answers
           from BEI&rsquo;s academic papers and never guesses.
+        </p>
+      )}
+
+      {status === 'done' && mode === 'deep' && (
+        <p className={styles.deepMeta}>
+          Deep research — {nSearches || 'multiple'} corpus searches synthesized
         </p>
       )}
 

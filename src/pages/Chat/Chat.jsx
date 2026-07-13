@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import Composer from './Composer';
 import MessageList from './MessageList';
@@ -19,7 +20,9 @@ const CORPUS_TOPICS =
 
 export default function Chat() {
   const { messages, isStreaming, send, stop, reset, sendFeedback } = useChatStream();
+  const [deep, setDeep] = useState(false);
   const empty = messages.length === 0;
+  const ask = (text) => send(text, { deep });
 
   return (
     <section className={styles.page}>
@@ -49,7 +52,7 @@ export default function Chat() {
                   key={q}
                   type="button"
                   className={styles.starter}
-                  onClick={() => send(q)}
+                  onClick={() => ask(q)}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 + i * 0.06 }}
@@ -91,12 +94,18 @@ export default function Chat() {
                 </button>
               </div>
             </div>
-            <MessageList messages={messages} onFeedback={sendFeedback} onAsk={send} />
+            <MessageList messages={messages} onFeedback={sendFeedback} onAsk={ask} />
           </>
         )}
 
         <div className={styles.composerArea}>
-          <Composer onSend={send} onStop={stop} isStreaming={isStreaming} />
+          <Composer
+            onSend={ask}
+            onStop={stop}
+            isStreaming={isStreaming}
+            deep={deep}
+            onToggleDeep={() => setDeep((d) => !d)}
+          />
           <p className={styles.disclaimer}>
             Answers are generated solely from BEI&rsquo;s corpus of academic papers and cite their
             sources. They are educational material, not financial advice.
