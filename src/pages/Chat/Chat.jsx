@@ -24,6 +24,17 @@ export default function Chat() {
   const empty = messages.length === 0;
   const ask = (text) => send(text, { deep });
 
+  const composer = (
+    <Composer
+      onSend={ask}
+      onStop={stop}
+      isStreaming={isStreaming}
+      deep={deep}
+      onToggleDeep={() => setDeep((d) => !d)}
+      autoFocus={empty}
+    />
+  );
+
   return (
     <section className={styles.page}>
       <div className={styles.chatFrame}>
@@ -46,6 +57,14 @@ export default function Chat() {
               Ask questions across BEI&rsquo;s corpus of ~2,900 academic papers on Bitcoin.
               Every answer cites the specific studies it draws from.
             </motion.p>
+            <motion.div
+              className={styles.composerCentered}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {composer}
+            </motion.div>
             <div className={styles.starters}>
               {STARTERS.map((q, i) => (
                 <motion.button
@@ -95,22 +114,15 @@ export default function Chat() {
               </div>
             </div>
             <MessageList messages={messages} onFeedback={sendFeedback} onAsk={ask} />
+            <div className={styles.composerArea}>
+              {composer}
+              <p className={styles.disclaimer}>
+                Answers are generated solely from BEI&rsquo;s corpus of academic papers and cite
+                their sources. They are educational material, not financial advice.
+              </p>
+            </div>
           </>
         )}
-
-        <div className={styles.composerArea}>
-          <Composer
-            onSend={ask}
-            onStop={stop}
-            isStreaming={isStreaming}
-            deep={deep}
-            onToggleDeep={() => setDeep((d) => !d)}
-          />
-          <p className={styles.disclaimer}>
-            Answers are generated solely from BEI&rsquo;s corpus of academic papers and cite their
-            sources. They are educational material, not financial advice.
-          </p>
-        </div>
       </div>
     </section>
   );

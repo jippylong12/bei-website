@@ -538,6 +538,12 @@
 
 /* Composer -----------------------------------------------------------------------*/
 
+.composerCentered {
+  width: 100%;
+  max-width: 40rem;
+  margin-top: var(--space-xs);
+}
+
 .composerArea {
   flex: none;
   padding: var(--space-sm) 0 var(--space-sm);
