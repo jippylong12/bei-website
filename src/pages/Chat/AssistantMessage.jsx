@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import SourcesPanel from './SourcesPanel';
 import styles from './Chat.module.css';
 
@@ -9,11 +12,13 @@ import styles from './Chat.module.css';
 // is already a markdown link.
 const toCitationLinks = (text) => text.replace(/\[(\d+)\](?!\()/g, '[$1](#src-$1)');
 
-export default function AssistantMessage({ message }) {
+export default function AssistantMessage({ message, onFeedback, onAsk }) {
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const [activeSource, setActiveSource] = useState(null);
+  const [copied, setCopied] = useState(false);
 
-  const { content, status, statusText, sources, citationsUsed, refused, errorMessage } = message;
+  const { content, status, statusText, sources, citationsUsed, refused,
+    errorMessage, feedback, followups } = message;
   const processed = useMemo(() => toCitationLinks(content || ''), [content]);
 
   const openSource = (index) => {
@@ -61,7 +66,11 @@ export default function AssistantMessage({ message }) {
 
       {content && (
         <div className={styles.markdown}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+            components={components}
+          >
             {processed}
           </ReactMarkdown>
           {status === 'streaming' && <span className={styles.caret} />}
@@ -84,6 +93,64 @@ export default function AssistantMessage({ message }) {
         onToggle={() => setSourcesOpen((o) => !o)}
         activeSource={activeSource}
       />
+
+      {status === 'done' && content && !refused && (
+        <div className={styles.answerActions}>
+          <button
+            type="button"
+            className={`${styles.actionBtn} ${feedback === 'up' ? styles.actionActive : ''}`}
+            onClick={() => onFeedback?.('up')}
+            aria-label="Helpful answer"
+            title="Helpful"
+          >
+            👍
+          </button>
+          <button
+            type="button"
+            className={`${styles.actionBtn} ${feedback === 'down' ? styles.actionActive : ''}`}
+            onClick={() => onFeedback?.('down')}
+            aria-label="Not helpful"
+            title="Not helpful"
+          >
+            👎
+          </button>
+          <button
+            type="button"
+            className={styles.actionBtn}
+            onClick={() => {
+              navigator.clipboard?.writeText(content).then(
+                () => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1500);
+                },
+                () => {}
+              );
+            }}
+            title="Copy answer"
+          >
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+          {feedback && <span className={styles.feedbackThanks}>Thanks for the feedback.</span>}
+        </div>
+      )}
+
+      {status === 'done' && followups?.length > 0 && (
+        <div className={styles.followups}>
+          <span className={styles.followupsLabel}>Related questions</span>
+          <div className={styles.followupChips}>
+            {followups.map((q) => (
+              <button
+                key={q}
+                type="button"
+                className={styles.followupChip}
+                onClick={() => onAsk?.(q)}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

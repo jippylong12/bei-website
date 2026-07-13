@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import AssistantMessage from './AssistantMessage';
 import styles from './Chat.module.css';
 
-export default function MessageList({ messages }) {
+export default function MessageList({ messages, onFeedback, onAsk }) {
   const scrollRef = useRef(null);
   const stickRef = useRef(true); // follow the stream unless the user scrolls up
 
@@ -26,7 +26,12 @@ export default function MessageList({ messages }) {
               {m.content}
             </div>
           ) : (
-            <AssistantMessage key={m.id} message={m} />
+            <AssistantMessage
+              key={m.id}
+              message={m}
+              onFeedback={(rating) => onFeedback?.(m.id, rating)}
+              onAsk={onAsk}
+            />
           )
         )}
       </div>
