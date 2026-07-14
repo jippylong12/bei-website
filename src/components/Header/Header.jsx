@@ -10,7 +10,9 @@ const navLinks = [
   { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
   { to: '/conference', label: 'Conference' },
-  { to: '/research', label: 'Research Chat' },
+  // Research Chat is in testing; reachable only via the preview link
+  // (see src/config/preview.js). Restore this entry to launch it.
+  // { to: '/research', label: 'Research Chat' },
 ];
 
 export default function Header() {
