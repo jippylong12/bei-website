@@ -7,6 +7,7 @@ import styles from './About.module.css';
 
 export default function About() {
   const base = import.meta.env.BASE_URL;
+  const showTeam = import.meta.env.VITE_SHOW_TEAM === 'true';
 
   return (
     <>
@@ -44,32 +45,34 @@ export default function About() {
         </p>
       </AnimatedSection>
 
-      <section className={styles.teamSection}>
-        <div className="container">
-          <motion.h2
-            className={styles.teamTitle}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            Our Team
-          </motion.h2>
-          <div className={styles.teamGrid}>
-            {team.map((member, i) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-              >
-                <TeamMember {...member} />
-              </motion.div>
-            ))}
+      {showTeam && (
+        <section className={styles.teamSection}>
+          <div className="container">
+            <motion.h2
+              className={styles.teamTitle}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              Our Team
+            </motion.h2>
+            <div className={styles.teamGrid}>
+              {team.map((member, i) => (
+                <motion.div
+                  key={member.name}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                >
+                  <TeamMember {...member} />
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   );
 }
