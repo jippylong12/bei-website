@@ -46,7 +46,7 @@ export default function Chat() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              Research Chat
+              BitResearch
             </motion.h1>
             <motion.p
               className={styles.subtitle}
@@ -94,7 +94,7 @@ export default function Chat() {
         ) : (
           <>
             <div className={styles.toolbar}>
-              <span className={styles.toolbarTitle}>Research Chat</span>
+              <span className={styles.toolbarTitle}>BitResearch</span>
               <div className={styles.toolbarActions}>
                 <button
                   type="button"
