@@ -40,7 +40,7 @@ export function clearMessages() {
 
 // Download the conversation as a Markdown file, including cited sources.
 export function exportTranscript(messages) {
-  const lines = ['# BEI Research Chat transcript', ''];
+  const lines = ['# BitResearch transcript', ''];
   for (const m of messages) {
     if (m.role === 'user') {
       lines.push(`## Q: ${m.content}`, '');
