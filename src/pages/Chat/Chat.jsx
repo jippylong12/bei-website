@@ -54,7 +54,7 @@ export default function Chat() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
-              Ask questions across BEI&rsquo;s corpus of ~2,900 academic papers on Bitcoin.
+              Ask questions across BEI&rsquo;s corpus of ~3,900 academic papers on Bitcoin.
               Every answer cites the specific studies it draws from.
             </motion.p>
             <motion.div

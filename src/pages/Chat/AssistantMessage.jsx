@@ -18,7 +18,7 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
   const [copied, setCopied] = useState(false);
 
   const { content, status, statusText, sources, citationsUsed, refused,
-    errorMessage, feedback, followups, mode, nSearches } = message;
+    errorMessage, feedback, followups, mode } = message;
   const processed = useMemo(() => toCitationLinks(content || ''), [content]);
 
   const openSource = (index) => {
@@ -109,9 +109,10 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
         </p>
       )}
 
-      {status === 'done' && mode === 'deep' && (
+      {status === 'done' && mode === 'deep' && sources?.length > 0 && (
         <p className={styles.deepMeta}>
-          Deep research — {nSearches || 'multiple'} corpus searches synthesized
+          Deep research — broader retrieval across {sources.length}{' '}
+          {sources.length === 1 ? 'paper' : 'papers'}
         </p>
       )}
 
