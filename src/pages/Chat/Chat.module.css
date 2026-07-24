@@ -536,6 +536,103 @@
   background: var(--color-accent);
 }
 
+/* Enriched source metadata (category / affiliations / emails / chips / abstract) */
+
+.sourceCat {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--bei-light-gold);
+  background: color-mix(in srgb, var(--bei-gold) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bei-gold) 40%, transparent);
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.sourceAffil,
+.sourceEmails {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+.sourceIcon {
+  opacity: 0.7;
+  margin-right: 0.1rem;
+}
+
+.sourceEmailLink {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.sourceEmailLink:hover {
+  text-decoration: underline;
+}
+
+.sourceChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.1rem;
+}
+
+.chip {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 0.08rem 0.45rem;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+a.chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.chipGhost {
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.sourceAbstract {
+  margin-top: 0.1rem;
+}
+
+.sourceAbstractSummary {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.sourceAbstractSummary::-webkit-details-marker {
+  display: none;
+}
+
+.sourceAbstractSummary:hover {
+  color: var(--color-accent);
+}
+
+.sourceAbstractText {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-top: 0.25rem;
+}
+
 /* Composer -----------------------------------------------------------------------*/
 
 .composerCentered {

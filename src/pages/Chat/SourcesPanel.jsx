@@ -13,6 +13,22 @@ function sourceHref(s) {
   return s.url || null;
 }
 
+function doiHref(doi) {
+  if (!doi) return null;
+  return String(doi).startsWith('http') ? doi : `https://doi.org/${doi}`;
+}
+
+// Identifier chips shown under a source: DOI / arXiv (linked) + chunk count.
+function sourceChips(s) {
+  const chips = [];
+  const dh = doiHref(s.doi);
+  if (dh) chips.push({ key: 'doi', label: 'DOI', href: dh });
+  if (s.arxiv_id)
+    chips.push({ key: 'arxiv', label: `arXiv:${s.arxiv_id}`, href: `https://arxiv.org/abs/${s.arxiv_id}` });
+  if (s.num_chunks) chips.push({ key: 'chunks', label: `${s.num_chunks} chunks`, ghost: true });
+  return chips;
+}
+
 export default function SourcesPanel({ sources, citationsUsed, open, onToggle, activeSource }) {
   if (!sources?.length) return null;
   const citedSet = new Set(citationsUsed || []);
@@ -28,6 +44,9 @@ export default function SourcesPanel({ sources, citationsUsed, open, onToggle, a
           {sources.map((s) => {
             const pages = formatPages(s);
             const isActive = activeSource === s.index;
+            const affils = (s.affiliations || []).filter(Boolean).slice(0, 4);
+            const emails = (s.emails || []).filter(Boolean).slice(0, 4);
+            const chips = sourceChips(s);
             return (
               <li
                 key={s.index}
@@ -63,11 +82,60 @@ export default function SourcesPanel({ sources, citationsUsed, open, onToggle, a
                     );
                   })()}
                   <span className={styles.sourceMeta}>
+                    {s.category && <span className={styles.sourceCat}>{s.category}</span>}
                     {[s.authors, s.year, s.section ? `§ ${s.section}` : null, pages]
                       .filter(Boolean)
                       .join(' · ')}
                   </span>
+                  {affils.length > 0 && (
+                    <span className={styles.sourceAffil}>
+                      <span className={styles.sourceIcon} aria-hidden="true">🏛</span>
+                      {' '}
+                      {affils.join(' · ')}
+                    </span>
+                  )}
+                  {emails.length > 0 && (
+                    <span className={styles.sourceEmails}>
+                      <span className={styles.sourceIcon} aria-hidden="true">✉</span>
+                      {' '}
+                      {emails.map((e, i) => (
+                        <span key={e}>
+                          {i > 0 ? ' · ' : ''}
+                          <a className={styles.sourceEmailLink} href={`mailto:${e}`}>
+                            {e}
+                          </a>
+                        </span>
+                      ))}
+                    </span>
+                  )}
+                  {chips.length > 0 && (
+                    <span className={styles.sourceChips}>
+                      {chips.map((c) =>
+                        c.href ? (
+                          <a
+                            key={c.key}
+                            className={styles.chip}
+                            href={c.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {c.label}
+                          </a>
+                        ) : (
+                          <span key={c.key} className={`${styles.chip} ${c.ghost ? styles.chipGhost : ''}`}>
+                            {c.label}
+                          </span>
+                        )
+                      )}
+                    </span>
+                  )}
                   {s.snippet && <p className={styles.sourceSnippet}>{s.snippet}…</p>}
+                  {s.abstract && (
+                    <details className={styles.sourceAbstract}>
+                      <summary className={styles.sourceAbstractSummary}>Abstract</summary>
+                      <p className={styles.sourceAbstractText}>{s.abstract}…</p>
+                    </details>
+                  )}
                   {typeof s.score === 'number' && (
                     <span className={styles.scoreBar} title={`Relevance ${(s.score * 100).toFixed(0)}%`}>
                       <span

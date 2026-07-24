@@ -1,10 +1,16 @@
-// Research-chat backend (FastAPI SSE server in the rag_bitcoin repo), exposed
-// through the Cloudflare tunnel. Override per-build with VITE_API_URL (see
-// .env.development for local dev).
+// Research-chat (BitResearch) backend base URL.
 //
-// Interim host: served by the `batchllm` tunnel on a zone already on
-// Cloudflare. When btcedu.org's nameservers move to Cloudflare, add an
-// `api.btcedu.org` ingress rule to the tunnel and change this to
-// 'https://api.btcedu.org' (CORS already allows the btcedu.org origin either way).
+// Local dev: the Vite dev server proxies /api/* to the local btc_rag backend
+// (see vite.config.js -> server.proxy), so the app calls its OWN origin
+// (API_BASE = ''). No separate API URL and no CORS in dev.
+//
+// Production: set VITE_API_URL to the backend at build time; otherwise it falls
+// back to the Cloudflare tunnel host (`batchllm`; later api.btcedu.org).
+const fromEnv = import.meta.env.VITE_API_URL;
+
 export const API_BASE =
-  import.meta.env.VITE_API_URL || 'https://bei-api.batchllm-workspace.info';
+  fromEnv !== undefined && fromEnv !== ''
+    ? fromEnv
+    : import.meta.env.DEV
+      ? '' // same-origin -> Vite dev proxy -> btc_rag
+      : 'https://bei-api.batchllm-workspace.info';
