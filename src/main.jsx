@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import App from './App';
 import Home from './pages/Home/Home';
 import WhatWeDo from './pages/WhatWeDo/WhatWeDo';
@@ -11,9 +11,19 @@ import Donate from './pages/Donate/Donate';
 import ChatLazy from './pages/Chat/ChatLazy';
 import './styles/global.css';
 
+// GitHub Pages has no SPA rewrite; deep links land on 404.html, which is a copy
+// of index.html (see package.json build), so the router below takes over there.
+//
+// The site used HashRouter until BitResearch launched; old links look like
+// btcedu.org/#/research. Rewrite them onto the clean path before rendering.
+if (window.location.hash.startsWith('#/')) {
+  const target = window.location.hash.slice(1).replace(/^\/research/, '/BitResearch');
+  window.history.replaceState(null, '', target);
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
@@ -22,9 +32,11 @@ createRoot(document.getElementById('root')).render(
           <Route path="contact" element={<Contact />} />
           <Route path="conference" element={<Conference />} />
           <Route path="donate" element={<Donate />} />
-          <Route path="research" element={<ChatLazy />} />
+          <Route path="BitResearch" element={<ChatLazy />} />
+          <Route path="research" element={<Navigate to="/BitResearch" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   </StrictMode>
 );
