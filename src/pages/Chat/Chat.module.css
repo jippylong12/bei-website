@@ -665,6 +665,7 @@ a.chip:hover {
 
 .input {
   flex: 1;
+  min-width: 0;
   resize: none;
   border: none;
   outline: none;
@@ -766,5 +767,22 @@ a.chip:hover {
 
   .assistantMessage {
     padding: var(--space-sm);
+  }
+
+  /* Side by side, the textarea is too narrow for one line of placeholder: it
+     wraps but rows=1 keeps the box one line tall, clipping the text. Give the
+     input its own full-width row and put the buttons underneath. */
+  .composer {
+    flex-wrap: wrap;
+  }
+
+  .input {
+    order: -1;
+    flex: 1 0 100%;
+  }
+
+  .sendButton,
+  .stopButton {
+    margin-left: auto;
   }
 }
