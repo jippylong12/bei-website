@@ -159,6 +159,9 @@
 
 .messageList {
   flex: 1;
+  /* Without this the list would grow the page instead of scrolling itself,
+     now that the frame is free to expand. */
+  min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--space-md) 0;
@@ -757,6 +760,14 @@ a.chip:hover {
 /* Mobile -------------------------------------------------------------------------*/
 
 @media (max-width: 640px) {
+  /* The empty state (title, composer, stacked starters, corpus note) is taller
+     than the viewport on a phone, and the fixed height made it overflow onto
+     the footer. Let the frame grow and the page scroll normally instead. */
+  .chatFrame {
+    height: auto;
+    min-height: calc(100dvh - var(--header-height));
+  }
+
   .starters {
     grid-template-columns: 1fr;
   }
