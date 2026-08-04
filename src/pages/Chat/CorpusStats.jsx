@@ -42,7 +42,11 @@ function fromApi(data) {
   const entries = Object.entries(data.by_year)
     .map(([y, n]) => [Number(y), Number(n)])
     .filter(([y, n]) => Number.isFinite(y) && Number.isFinite(n) && n >= 0);
-  const byYear = entries.filter(([y]) => y >= FIRST_CHART_YEAR).sort((a, b) => a[0] - b[0]);
+  // Drop future-dated outliers (bad metadata years); they still count in totals.
+  const maxYear = new Date().getFullYear();
+  const byYear = entries
+    .filter(([y]) => y >= FIRST_CHART_YEAR && y <= maxYear)
+    .sort((a, b) => a[0] - b[0]);
   if (!byYear.length) return null;
   return {
     papers: fmt(data.papers),
