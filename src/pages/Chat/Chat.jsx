@@ -4,6 +4,7 @@ import Composer from './Composer';
 import CorpusStats from './CorpusStats';
 import MessageList from './MessageList';
 import useChatStream from './useChatStream';
+import useCorpusStats from './useCorpusStats';
 import { exportTranscript } from './storage';
 import styles from './Chat.module.css';
 
@@ -14,6 +15,7 @@ const CORPUS_TOPICS =
 
 export default function Chat() {
   const { messages, isStreaming, send, stop, reset, sendFeedback } = useChatStream();
+  const stats = useCorpusStats();
   const [deep, setDeep] = useState(false);
   const empty = messages.length === 0;
   const ask = (text) => send(text, { deep });
@@ -48,7 +50,7 @@ export default function Chat() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
-              Ask questions across BEI&rsquo;s corpus of ~3,900 academic papers on Bitcoin.
+              Ask questions across BEI&rsquo;s corpus of {stats.papersApprox} academic papers on Bitcoin.
               Every answer cites the specific studies it draws from.
             </motion.p>
             <motion.div
@@ -74,7 +76,7 @@ export default function Chat() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <CorpusStats />
+              <CorpusStats stats={stats} />
             </motion.div>
           </div>
         ) : (
