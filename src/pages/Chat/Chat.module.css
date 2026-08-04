@@ -36,31 +36,118 @@
   max-width: 34rem;
 }
 
-.starters {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
+/* Corpus stats -------------------------------------------------------------*/
+
+.corpusStatsReveal {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.corpusStats {
   width: 100%;
   max-width: 40rem;
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
 }
 
-.starter {
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.statTile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+.statValue {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  text-align: left;
+  font-weight: 600;
+  font-size: 1.35rem;
   color: var(--color-text);
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--color-text-muted);
+}
+
+.chartBlock {
+  margin-top: var(--space-md);
+}
+
+.chartTitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: var(--space-xs);
+}
+
+.chartWrap {
+  position: relative;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bar {
+  fill: var(--color-accent);
+}
+
+.barHover {
+  fill: var(--color-accent-subtle);
+}
+
+.hitArea {
+  fill: transparent;
+}
+
+.gridline {
+  stroke: color-mix(in srgb, var(--bei-cream) 10%, transparent);
+  stroke-width: 1;
+}
+
+.tickLabel {
+  font-family: var(--font-body);
+  font-size: 10px;
+  fill: var(--color-text-muted);
+}
+
+.peakLabel {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--color-text);
+}
+
+.chartTooltip {
+  position: absolute;
+  top: -0.25rem;
+  transform: translateX(-50%);
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border);
-  border-radius: var(--card-radius);
-  padding: var(--space-sm);
-  cursor: pointer;
-  line-height: 1.45;
-  transition: border-color 0.2s ease;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-text);
+  white-space: nowrap;
+  pointer-events: none;
 }
 
-.starter:hover {
-  border-color: var(--color-accent);
+.chartFootnote {
+  margin-top: var(--space-xs);
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-align: center;
 }
 
 /* Toolbar ------------------------------------------------------------------*/
@@ -760,16 +847,28 @@ a.chip:hover {
 /* Mobile -------------------------------------------------------------------------*/
 
 @media (max-width: 640px) {
-  /* The empty state (title, composer, stacked starters, corpus note) is taller
-     than the viewport on a phone, and the fixed height made it overflow onto
-     the footer. Let the frame grow and the page scroll normally instead. */
+  /* The empty state (title, composer, corpus note) is taller than the
+     viewport on a phone, and the fixed height made it overflow onto the
+     footer. Let the frame grow and the page scroll normally instead. */
   .chatFrame {
     height: auto;
     min-height: calc(100dvh - var(--header-height));
   }
 
-  .starters {
-    grid-template-columns: 1fr;
+  .statRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-md);
+  }
+
+  /* The SVG scales down with the viewport, shrinking its text with it. At
+     phone widths the drawing is ~60% size, so scale the type back up in SVG
+     units to land at a readable on-screen size. */
+  .tickLabel {
+    font-size: 16px;
+  }
+
+  .peakLabel {
+    font-size: 18px;
   }
 
   .userMessage {

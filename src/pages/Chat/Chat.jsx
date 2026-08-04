@@ -1,17 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import Composer from './Composer';
+import CorpusStats from './CorpusStats';
 import MessageList from './MessageList';
 import useChatStream from './useChatStream';
 import { exportTranscript } from './storage';
 import styles from './Chat.module.css';
-
-const STARTERS = [
-  'What is selfish mining and why does it threaten Bitcoin?',
-  'What does the research say about Bitcoin mining energy consumption?',
-  'What drives Bitcoin price volatility according to academic studies?',
-  'How effective is Bitcoin as an inflation hedge?',
-];
 
 // A short read on what the corpus covers, so users calibrate what to ask.
 const CORPUS_TOPICS =
@@ -65,31 +59,23 @@ export default function Chat() {
             >
               {composer}
             </motion.div>
-            <div className={styles.starters}>
-              {STARTERS.map((q, i) => (
-                <motion.button
-                  key={q}
-                  type="button"
-                  className={styles.starter}
-                  onClick={() => ask(q)}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 + i * 0.06 }}
-                  whileHover={{ y: -2 }}
-                >
-                  {q}
-                </motion.button>
-              ))}
-            </div>
             <motion.p
               className={styles.corpusNote}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
             >
               The corpus covers {CORPUS_TOPICS}. Ask about findings, methods, or how
               studies compare — not live prices or predictions.
             </motion.p>
+            <motion.div
+              className={styles.corpusStatsReveal}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <CorpusStats />
+            </motion.div>
           </div>
         ) : (
           <>
