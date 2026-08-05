@@ -8,19 +8,17 @@ import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
 import Conference from './pages/Conference/Conference';
 import Donate from './pages/Donate/Donate';
-import PreviewGate from './pages/Chat/PreviewGate';
+import ChatLazy from './pages/Chat/ChatLazy';
 import './styles/global.css';
 
 // GitHub Pages has no SPA rewrite; deep links land on 404.html, which is a copy
 // of index.html (see package.json build), so the router below takes over there.
 //
 // The site used HashRouter until BitResearch launched; old links look like
-// btcedu.org/#/about. Rewrite them onto the clean path before rendering.
-//
-// Old #/research links are deliberately NOT mapped onto /BitResearch any more:
-// BitResearch is an unlisted preview now, so they fall through to the home page.
+// btcedu.org/#/research. Rewrite them onto the clean path before rendering.
 if (window.location.hash.startsWith('#/')) {
-  window.history.replaceState(null, '', window.location.hash.slice(1));
+  const target = window.location.hash.slice(1).replace(/^\/research/, '/BitResearch');
+  window.history.replaceState(null, '', target);
 }
 
 createRoot(document.getElementById('root')).render(
@@ -34,8 +32,10 @@ createRoot(document.getElementById('root')).render(
           <Route path="contact" element={<Contact />} />
           <Route path="conference" element={<Conference />} />
           <Route path="donate" element={<Donate />} />
-          {/* Unlisted: renders only with the preview token (see config/preview.js). */}
-          <Route path="BitResearch" element={<PreviewGate />} />
+          {/* Reachable by direct URL only: nothing on the site links here, and
+              it is noindex + robots-disallowed. See ChatLazy for why. */}
+          <Route path="BitResearch" element={<ChatLazy />} />
+          <Route path="research" element={<Navigate to="/BitResearch" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

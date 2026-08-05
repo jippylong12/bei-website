@@ -10,8 +10,9 @@ const navLinks = [
   { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
   { to: '/conference', label: 'Conference' },
-  // BitResearch is intentionally absent: it is an unlisted preview reachable
-  // only via its token link. See src/config/preview.js.
+  // BitResearch is intentionally absent. /BitResearch still loads for anyone
+  // holding the URL, but it must not be discoverable from btcedu.org itself —
+  // do not add it back here. See src/pages/Chat/ChatLazy.jsx.
 ];
 
 export default function Header() {
