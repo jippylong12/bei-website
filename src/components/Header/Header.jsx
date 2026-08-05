@@ -10,7 +10,8 @@ const navLinks = [
   { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
   { to: '/conference', label: 'Conference' },
-  { to: '/BitResearch', label: 'BitResearch' },
+  // BitResearch is intentionally absent: it is an unlisted preview reachable
+  // only via its token link. See src/config/preview.js.
 ];
 
 export default function Header() {

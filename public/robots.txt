@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# BitResearch is an unlisted preview, not part of the public site.
+Disallow: /BitResearch
+Disallow: /research
