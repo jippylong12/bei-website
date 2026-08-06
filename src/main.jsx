@@ -9,6 +9,7 @@ import Contact from './pages/Contact/Contact';
 import Conference from './pages/Conference/Conference';
 import Donate from './pages/Donate/Donate';
 import ChatLazy from './pages/Chat/ChatLazy';
+import PolicyBot from './pages/PolicyBot/PolicyBot';
 import './styles/global.css';
 
 // GitHub Pages has no SPA rewrite; deep links land on 404.html, which is a copy
@@ -36,6 +37,11 @@ createRoot(document.getElementById('root')).render(
               it is noindex + robots-disallowed. See ChatLazy for why. */}
           <Route path="BitResearch" element={<ChatLazy />} />
           <Route path="research" element={<Navigate to="/BitResearch" replace />} />
+          {/* Same posture: unlinked, noindex, robots-disallowed. This one only
+              forwards to the SwIRL bot, which sits behind Cloudflare Access —
+              it can edit the handbooks, so it is never served from this site. */}
+          <Route path="swirlpolicybot" element={<PolicyBot />} />
+          <Route path="SwirlPolicyBot" element={<Navigate to="/swirlpolicybot" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

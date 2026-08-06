@@ -5,3 +5,8 @@ Allow: /
 # URL, but it is not linked from btcedu.org and must stay out of search results.
 Disallow: /BitResearch
 Disallow: /research
+
+# The SwIRL policy bot is staff-only. This path just forwards to it; the bot
+# itself is behind Cloudflare Access and never reachable from this site.
+Disallow: /swirlpolicybot
+Disallow: /SwirlPolicyBot
