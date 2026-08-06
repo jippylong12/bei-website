@@ -52,21 +52,22 @@ export default function PolicyBot() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <p className={styles.eyebrow}>SwIRL · staff only</p>
-        <h1 className={styles.title}>SwIRL Policy Bot</h1>
+        <p className={styles.eyebrow}>SwIRL · staff</p>
+        <h1 className={styles.title}>SwIRL Handbook Bot</h1>
         <p className={styles.text}>
           Answers questions from the SwIRL handbooks and drafts edits to them,
           with every change shown as a diff for approval before anything is
           written.
         </p>
         <p className={styles.text}>
-          It is hosted separately from this site and is restricted to the SwIRL
-          team. You will be asked to sign in with your work email and a code
-          sent to it.
+          It is hosted separately from this site. Please treat this link as
+          internal and don&rsquo;t share it outside SwIRL &mdash; there is no
+          sign-in, so anyone holding it can read the handbooks and approve
+          changes to them.
         </p>
 
         <a className={styles.button} href={BOT_URL}>
-          Continue to the policy bot
+          Continue to the handbook bot
         </a>
 
         <p className={styles.note}>

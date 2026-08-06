@@ -6,7 +6,7 @@ Allow: /
 Disallow: /BitResearch
 Disallow: /research
 
-# The SwIRL policy bot is staff-only. This path just forwards to it; the bot
-# itself is behind Cloudflare Access and never reachable from this site.
-Disallow: /swirlpolicybot
-Disallow: /SwirlPolicyBot
+# The SwIRL handbook bot is for staff. This path only forwards to it; the bot
+# itself is hosted separately and never served from this site. Keeping it out of
+# search matters more now that the bot itself has no login.
+Disallow: /handbot

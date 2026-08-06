@@ -38,10 +38,9 @@ createRoot(document.getElementById('root')).render(
           <Route path="BitResearch" element={<ChatLazy />} />
           <Route path="research" element={<Navigate to="/BitResearch" replace />} />
           {/* Same posture: unlinked, noindex, robots-disallowed. This one only
-              forwards to the SwIRL bot, which sits behind Cloudflare Access —
+              forwards to the SwIRL handbook bot, which is hosted separately —
               it can edit the handbooks, so it is never served from this site. */}
-          <Route path="swirlpolicybot" element={<PolicyBot />} />
-          <Route path="SwirlPolicyBot" element={<Navigate to="/swirlpolicybot" replace />} />
+          <Route path="handbot" element={<PolicyBot />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
