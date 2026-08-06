@@ -1,3 +1,4 @@
+import { API_BASE } from '../../config/api';
 import styles from './Chat.module.css';
 
 function formatPages(s) {
@@ -18,13 +19,26 @@ function doiHref(doi) {
   return String(doi).startsWith('http') ? doi : `https://doi.org/${doi}`;
 }
 
-// Identifier chips shown under a source: DOI / arXiv (linked) + chunk count.
+// Corpus PDF hosted by the API. `pdf` is a path, not an absolute URL, so it is
+// prefixed with API_BASE like every other backend call — a bare /api/... would
+// resolve against btcedu.org, which serves no API.
+function pdfHref(s) {
+  return s.pdf ? `${API_BASE}${s.pdf}` : null;
+}
+
+// Identifier chips shown under a source: DOI / arXiv / PDF (linked) + chunk count.
 function sourceChips(s) {
   const chips = [];
   const dh = doiHref(s.doi);
   if (dh) chips.push({ key: 'doi', label: 'DOI', href: dh });
   if (s.arxiv_id)
     chips.push({ key: 'arxiv', label: `arXiv:${s.arxiv_id}`, href: `https://arxiv.org/abs/${s.arxiv_id}` });
+  // The backend sets `pdf` only on papers it will actually serve — the ones with
+  // no DOI, arXiv id or publisher URL, whose titles would otherwise be dead text
+  // with nowhere for a reader to go. Papers the publisher hosts get null here, so
+  // this chip never competes with the DOI link and never 404s.
+  const ph = pdfHref(s);
+  if (ph) chips.push({ key: 'pdf', label: 'PDF', href: ph });
   if (s.num_chunks) chips.push({ key: 'chunks', label: `${s.num_chunks} chunks`, ghost: true });
   return chips;
 }
