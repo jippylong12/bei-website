@@ -1,41 +1,29 @@
-// localStorage persistence for the research chat. The browser is the only
-// place the conversation lives — the API is stateless and receives the
-// history with every turn.
-const KEY = 'bei.research-chat.v1';
-const MAX_MESSAGES = 40;
+// In-memory persistence for the research chat. The conversation lives only in
+// this module, so it survives navigating to another page and back (the Chat
+// component unmounts, this module does not) but is gone after a page refresh —
+// a reload deliberately starts a new conversation. The API is stateless and
+// receives the history with every turn.
+let memory = [];
+
+// Earlier builds persisted the conversation under this localStorage key. Clear
+// it once on load so nothing from before this change lingers in the browser.
+try {
+  localStorage.removeItem('bei.research-chat.v1');
+} catch {
+  // storage blocked — nothing to clean up
+}
 
 export function loadMessages() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return [];
-    const data = JSON.parse(raw);
-    if (data?.v !== 1 || !Array.isArray(data.messages)) return [];
-    // a message persisted mid-stream (tab closed) is shown as stopped
-    return data.messages.map((m) =>
-      m.status === 'streaming' ? { ...m, status: 'stopped' } : m
-    );
-  } catch {
-    return [];
-  }
+  // a message stored mid-stream (navigated away) comes back as stopped
+  return memory.map((m) => (m.status === 'streaming' ? { ...m, status: 'stopped' } : m));
 }
 
 export function saveMessages(messages) {
-  try {
-    localStorage.setItem(
-      KEY,
-      JSON.stringify({ v: 1, updatedAt: Date.now(), messages: messages.slice(-MAX_MESSAGES) })
-    );
-  } catch {
-    // storage full/blocked — the chat still works, it just won't persist
-  }
+  memory = messages;
 }
 
 export function clearMessages() {
-  try {
-    localStorage.removeItem(KEY);
-  } catch {
-    // ignore
-  }
+  memory = [];
 }
 
 // Download the conversation as a Markdown file, including cited sources.

@@ -49,9 +49,11 @@ export default function useChatStream() {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortRef = useRef(null);
 
+  // Cheap now that the store is a module variable, so it also runs mid-stream:
+  // a partial answer survives navigating away and back within the site.
   useEffect(() => {
-    if (!isStreaming) saveMessages(messages);
-  }, [messages, isStreaming]);
+    saveMessages(messages);
+  }, [messages]);
 
   // abort an in-flight stream if the user navigates away from the page
   useEffect(() => () => abortRef.current?.abort(), []);
