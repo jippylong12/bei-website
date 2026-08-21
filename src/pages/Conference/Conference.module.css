@@ -54,3 +54,112 @@
     grid-template-columns: 1fr;
   }
 }
+
+.photoSection {
+  padding-top: var(--section-padding);
+}
+
+.photoFigure {
+  margin: 0;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--color-border);
+}
+
+.photoCaption {
+  margin-top: var(--space-sm);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.agendaSection {
+  padding-top: var(--section-padding);
+}
+
+.agendaHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.agendaTitle {
+  font-size: 1.75rem;
+  letter-spacing: 0;
+}
+
+.agendaVenue {
+  margin-top: var(--space-xs);
+  color: var(--color-text-muted);
+}
+
+.downloadButton {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 4px;
+  color: var(--color-accent) !important;
+  font-weight: 650;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.downloadButton:hover {
+  background: var(--color-accent);
+  color: var(--bei-navy) !important;
+}
+
+.schedule {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+}
+
+.scheduleRow {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.scheduleRow:last-child {
+  border-bottom: none;
+}
+
+.scheduleTime {
+  color: var(--color-accent-subtle);
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.scheduleTitle {
+  font-weight: 650;
+}
+
+.scheduleSpeakers {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .scheduleRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+
+  .scheduleTime {
+    white-space: normal;
+  }
+}
