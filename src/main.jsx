@@ -6,7 +6,8 @@ import Home from './pages/Home/Home';
 import WhatWeDo from './pages/WhatWeDo/WhatWeDo';
 import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
-import Conference from './pages/Conference/Conference';
+import Conference2026 from './pages/Conference/Conference2026';
+import Conference2027 from './pages/Conference/Conference2027';
 import Donate from './pages/Donate/Donate';
 import ChatLazy from './pages/Chat/ChatLazy';
 import PolicyBot from './pages/PolicyBot/PolicyBot';
@@ -31,7 +32,10 @@ createRoot(document.getElementById('root')).render(
           <Route path="what-we-do" element={<WhatWeDo />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
-          <Route path="conference" element={<Conference />} />
+          <Route path="conference-2026" element={<Conference2026 />} />
+          <Route path="conference-2027" element={<Conference2027 />} />
+          {/* The single conference page split into per-year tabs; keep old links working */}
+          <Route path="conference" element={<Navigate to="/conference-2027" replace />} />
           <Route path="donate" element={<Donate />} />
           {/* Reachable by direct URL only: nothing on the site links here, and
               it is noindex + robots-disallowed. See ChatLazy for why. */}

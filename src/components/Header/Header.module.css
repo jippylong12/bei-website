@@ -56,6 +56,7 @@
 .navLink {
   font-family: var(--font-body);
   font-size: 0.95rem;
+  white-space: nowrap;
   font-weight: 550;
   letter-spacing: 0;
   color: var(--color-text-muted);
@@ -120,7 +121,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 899px) {
   .hamburger {
     display: flex;
   }
@@ -164,5 +165,23 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
     z-index: 102;
+  }
+}
+
+/* Two conference tabs make seven links: tighten the row before the
+   hamburger takes over at 899px */
+@media (min-width: 900px) and (max-width: 1220px) {
+  .nav {
+    gap: 1.1rem;
+  }
+
+  .navLink {
+    font-size: 0.85rem;
+  }
+
+  .logo,
+  .logo img {
+    width: 210px;
+    min-width: 210px;
   }
 }

@@ -9,7 +9,8 @@ const navLinks = [
   { to: '/about', label: 'About' },
   { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
-  { to: '/conference', label: 'Conference' },
+  { to: '/conference-2026', label: '2026 Conference' },
+  { to: '/conference-2027', label: '2027 Conference' },
   // BitResearch is intentionally absent. /BitResearch still loads for anyone
   // holding the URL, but it must not be discoverable from btcedu.org itself —
   // do not add it back here. See src/pages/Chat/ChatLazy.jsx.

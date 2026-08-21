@@ -44,7 +44,7 @@ const schedule = [
   },
 ];
 
-export default function Conference() {
+export default function Conference2026() {
   const base = import.meta.env.BASE_URL;
 
   return (
@@ -134,52 +134,6 @@ export default function Conference() {
         </div>
       </section>
 
-      <section className={styles.infoSection}>
-        <div className="container">
-          <div className={styles.grid}>
-            <motion.div
-              className={styles.card}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <h2 className={styles.cardTitle}>Who Should Attend</h2>
-              <p>
-                Our conference brings together educators, researchers, and
-                practitioners from across higher education to advance the
-                rigorous, interdisciplinary study of Bitcoin.
-              </p>
-              <p>
-                Faculty, graduate students, researchers, and Bitcoin-interested
-                individuals across disciplines including economics, finance,
-                computer science, law, energy, or policy.
-              </p>
-            </motion.div>
-            <motion.div
-              className={styles.card}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <h2 className={styles.cardTitle}>What to Expect</h2>
-              <p>
-                Keynote presentations from leading Bitcoin researchers and
-                educators.
-              </p>
-              <p>
-                Research presentations showcasing rigorous approaches to the
-                academic study of Bitcoin.
-              </p>
-              <p>
-                Networking with colleagues who are developing Bitcoin curricula
-                nationwide.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
     </>
   );
 }
