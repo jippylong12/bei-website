@@ -2,8 +2,8 @@ import { motion } from 'motion/react';
 import Hero from '../../components/Hero/Hero';
 import styles from './Conference.module.css';
 
-// 2027 form comes from Daniel; the Register button renders once this is set.
-const REGISTRATION_FORM_URL = null;
+const REGISTRATION_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSe3cSZKnGAQOO7lDALniVFbhEVgFLae6zNv5K8cTQD6EGH1cA/viewform';
 
 export default function Conference2027() {
   return (
