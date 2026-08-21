@@ -80,6 +80,7 @@
 
 .agendaSection {
   padding-top: var(--section-padding);
+  scroll-margin-top: var(--header-height);
 }
 
 .agendaHeader {

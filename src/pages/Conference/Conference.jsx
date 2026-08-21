@@ -51,17 +51,15 @@ export default function Conference() {
     <>
       <Hero
         title="Annual Bitcoin Education Institute Conference 2026"
-        subtitle="A formal gathering for Bitcoin educators, researchers, and interdisciplinary academic work."
+        subtitle="A formal gathering for Bitcoin educators, researchers, and interdisciplinary academic work, held July 31, 2026 at George Washington University's Elliott School of International Affairs in Washington, DC."
       >
         <motion.a
-          href="http://forms.gle/dDMLL2XFuCEkPt1z5"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#agenda"
           className={styles.registerButton}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.97 }}
         >
-          Register
+          View the 2026 Agenda
         </motion.a>
       </Hero>
 
@@ -87,7 +85,7 @@ export default function Conference() {
         </div>
       </section>
 
-      <section className={styles.agendaSection}>
+      <section className={styles.agendaSection} id="agenda">
         <div className="container">
           <motion.div
             className={styles.agendaHeader}
