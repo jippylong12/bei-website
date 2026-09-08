@@ -6,6 +6,7 @@ import MessageList from './MessageList';
 import useChatStream from './useChatStream';
 import useCorpusStats from './useCorpusStats';
 import { exportTranscript } from './storage';
+import { API_BASE } from '../../config/api';
 import styles from './Chat.module.css';
 
 // A short read on what the corpus covers, so users calibrate what to ask.
@@ -69,6 +70,23 @@ export default function Chat() {
             >
               The corpus covers {CORPUS_TOPICS}. Ask about findings, methods, or how
               studies compare — not live prices or predictions.
+            </motion.p>
+            <motion.p
+              className={styles.newsletterNote}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+            >
+              Want a weekly digest of new Bitcoin research?{' '}
+              <a
+                className={styles.newsletterLink}
+                href={`${API_BASE}/newsletter`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Subscribe to BitResearch Weekly
+              </a>
+              .
             </motion.p>
             <motion.div
               className={styles.corpusStatsReveal}
