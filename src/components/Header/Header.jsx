@@ -11,9 +11,12 @@ const navLinks = [
   { to: '/contact', label: 'Contact' },
   { to: '/conference-2026', label: '2026 Conference' },
   { to: '/conference-2027', label: '2027 Conference' },
-  // BitResearch is intentionally absent. /BitResearch still loads for anyone
-  // holding the URL, but it must not be discoverable from btcedu.org itself —
-  // do not add it back here. See src/pages/Chat/ChatLazy.jsx.
+  { to: '/BitResearch', label: 'BitResearch' },
+  // BitResearch is now linked from the site nav (soft launch), but it is still
+  // kept OUT of search engines: ChatLazy sets noindex,nofollow and
+  // public/robots.txt Disallows /BitResearch. That combination is deliberate —
+  // discoverable to visitors on the site, not indexed by Google. Do not remove
+  // the noindex/Disallow when adding nav visibility.
 ];
 
 export default function Header() {
