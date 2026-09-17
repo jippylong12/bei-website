@@ -21,6 +21,21 @@ const FALLBACK = {
   preChart: 215,
   earliestYear: 1938,
   asOf: null,
+  // Primary-subject counts, same snapshot. Unlike the headline figures these
+  // are exact rather than rounded down: a bar chart's parts have to sum to its
+  // stated total, so "3,900+" style rounding would make the footnote wrong.
+  byClass: [
+    ['Volatility and Risk', 738], ['Markets and Asset Pricing', 633],
+    ['Macro and Monetary', 398], ['Protocol', 398],
+    ['Forecasting and Prediction', 325], ['Cryptography and Security', 246],
+    ['Mining and Energy', 233], ['Regulation/Law/Policy', 206],
+    ['Adoption and Society', 203], ['Other', 174],
+    ['AI and Machine Learning', 158], ['Data and Networks', 134],
+    ['Illicit Use and Forensics', 106], ['Other Crypto and DeFi', 101],
+    ['Surveys and Reviews', 63], ['Corporate Treasury and DATCos', 28],
+    ['Supply and Halving', 16], ['Uncategorized', 1],
+  ],
+  classified: 4161,
 };
 
 // Years before this are folded into the footnote instead of charted.
@@ -53,7 +68,25 @@ function fromApi(data) {
     preChart: entries.filter(([y]) => y < FIRST_CHART_YEAR).reduce((s, [, n]) => s + n, 0),
     earliestYear: Math.min(...entries.map(([y]) => y)),
     asOf: typeof data.as_of === 'string' ? data.as_of : null,
+    ...classesFromApi(data),
   };
+}
+
+// by_class arrives as [[name, papers], ...]. It is optional — the endpoint only
+// has it when the payload came from the database, not from the CSV fallback —
+// so an absent or malformed field keeps the snapshot distribution rather than
+// emptying the chart, the same way a missing `venues` keeps its snapshot tile. `classified` is the
+// chart's denominator and is derived from the rows themselves, never from
+// `papers`, which also counts citable papers the classifier has not reached.
+function classesFromApi(data) {
+  const snapshot = { byClass: FALLBACK.byClass, classified: FALLBACK.classified };
+  if (!Array.isArray(data.by_class)) return snapshot;
+  const byClass = data.by_class
+    .filter((row) => Array.isArray(row) && typeof row[0] === 'string' && row[0].trim())
+    .map(([name, n]) => [name.trim(), Number(n)])
+    .filter(([, n]) => Number.isFinite(n) && n > 0);
+  if (!byClass.length) return snapshot;
+  return { byClass, classified: byClass.reduce((sum, [, n]) => sum + n, 0) };
 }
 
 // Fetch once per page load; later mounts reuse the cached result.

@@ -14,6 +14,16 @@
   padding: 0 var(--space-md);
 }
 
+/* A conversation has to be exactly one viewport tall — the message list
+   scrolls inside it and the composer is pinned to the bottom edge. The empty
+   state has no such contract and is now taller than that, so it grows instead:
+   with a fixed height its overflow ran on past the frame and the footer, laid
+   out after it, drew over the bottom of the class chart. */
+.chatFrameEmpty {
+  height: auto;
+  min-height: calc(100dvh - var(--header-height));
+}
+
 /* Empty state --------------------------------------------------------------*/
 
 .emptyState {
@@ -148,6 +158,120 @@
   font-size: 0.72rem;
   color: var(--color-text-muted);
   text-align: center;
+}
+
+/* Class distribution -------------------------------------------------------
+
+   Horizontal bars, not columns: the categories are words, and vertical bars
+   would need rotated labels to fit "Markets and Asset Pricing" in a 40px band.
+   The value is printed next to every bar, so there is nothing to hover for and
+   no tooltip — the bar carries the comparison, the number carries the fact. */
+
+.classChart {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.classItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--bei-cream) 8%, transparent);
+}
+
+.classItem:last-child {
+  border-bottom: none;
+}
+
+.classRow {
+  display: grid;
+  grid-template-columns: minmax(0, 9.5rem) 1fr 2.6rem 2.6rem;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.28rem 0.35rem;
+  /* Button reset: every topical row IS a button, and the default chrome (UA
+     font, centred text, grey ground) would otherwise fight the chart. */
+  margin: 0;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+}
+
+.classRowButton {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.classRowButton:hover,
+.classRowButton:focus-visible {
+  background: color-mix(in srgb, var(--bei-cream) 7%, transparent);
+}
+
+.classRowButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* The bar is the row's subject, so it is what brightens on hover — the row
+   tint alone reads as a list highlight rather than "this is about this bar". */
+.classRowButton:hover .classBar,
+.classRowButton:focus-visible .classBar {
+  background: var(--color-accent-subtle);
+}
+
+.className {
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-align: right;
+  color: var(--color-text);
+}
+
+.classTrack {
+  display: block;
+  height: 0.6rem;
+}
+
+.classBar {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transition: background-color 0.15s ease;
+  /* Grown with a transform rather than the width so the ten bars animate on
+     the compositor; width would lay out the whole list ten times over. */
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: classBarGrow 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes classBarGrow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .classBar {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+.classValue {
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--color-text);
+}
+
+.classShare {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--color-text-muted);
 }
 
 /* Toolbar ------------------------------------------------------------------*/
@@ -887,6 +1011,27 @@ a.chip:hover {
 
   .peakLabel {
     font-size: 18px;
+  }
+
+  /* A 9.5rem label column leaves ~40% of a phone screen for the bar, which is
+     too little to compare against. Give the name and its number their own
+     line and let the bar span the full width underneath. */
+  .classRow {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.1rem 0.5rem;
+    padding: 0.4rem 0.35rem;
+  }
+
+  .className {
+    text-align: left;
+    font-size: 0.82rem;
+  }
+
+  .classTrack {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    height: 0.45rem;
+    margin-top: 0.2rem;
   }
 
   .userMessage {

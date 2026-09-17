@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import ClassChart from './ClassChart';
 import styles from './Chat.module.css';
 
 // Chart geometry (SVG user units; the SVG itself scales to its container).
@@ -23,7 +24,7 @@ function barPath(bx, barW, by) {
   ].join(' ');
 }
 
-export default function CorpusStats({ stats }) {
+export default function CorpusStats({ stats, onPick }) {
   const [hover, setHover] = useState(null);
 
   const chart = useMemo(() => {
@@ -69,6 +70,12 @@ export default function CorpusStats({ stats }) {
           </div>
         ))}
       </div>
+
+      {/* Subjects before years, deliberately. This is the chart that answers
+          "what can I ask about", which is the only question a visitor has at
+          this point; the year chart is a scale signal and reads fine below the
+          fold. */}
+      <ClassChart stats={stats} onPick={onPick} />
 
       <div className={styles.chartBlock}>
         <p className={styles.chartTitle}>Papers by year of publication</p>
@@ -154,6 +161,7 @@ export default function CorpusStats({ stats }) {
           {asOfLabel && ` Corpus updated ${asOfLabel}.`}
         </p>
       </div>
+
     </div>
   );
 }

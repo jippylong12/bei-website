@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import Composer from './Composer';
 import CorpusStats from './CorpusStats';
@@ -9,17 +9,14 @@ import { exportTranscript } from './storage';
 import { API_BASE } from '../../config/api';
 import styles from './Chat.module.css';
 
-// A short read on what the corpus covers, so users calibrate what to ask.
-const CORPUS_TOPICS =
-  'mining & consensus, energy use, price volatility & forecasting, adoption, ' +
-  'regulation, macro & monetary policy, the Lightning Network, and market microstructure';
-
 export default function Chat() {
   const { messages, isStreaming, send, stop, reset, sendFeedback } = useChatStream();
   const stats = useCorpusStats();
   const [deep, setDeep] = useState(false);
+  const composerRef = useRef(null);
   const empty = messages.length === 0;
   const ask = (text) => send(text, { deep });
+  const suggest = (text) => composerRef.current?.fill(text);
 
   const composer = (
     <Composer
@@ -29,12 +26,13 @@ export default function Chat() {
       deep={deep}
       onToggleDeep={() => setDeep((d) => !d)}
       autoFocus={empty}
+      ref={composerRef}
     />
   );
 
   return (
     <section className={styles.page}>
-      <div className={styles.chatFrame}>
+      <div className={`${styles.chatFrame} ${empty ? styles.chatFrameEmpty : ''}`}>
         {empty ? (
           <div className={styles.emptyState}>
             <motion.h1
@@ -62,14 +60,18 @@ export default function Chat() {
             >
               {composer}
             </motion.div>
+            {/* The class chart below lists what the corpus covers, in the
+                proportions it actually covers them — so this line no longer
+                spells the topics out, it only says what kind of question
+                works. */}
             <motion.p
               className={styles.corpusNote}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              The corpus covers {CORPUS_TOPICS}. Ask about findings, methods, or how
-              studies compare — not live prices or predictions.
+              Ask about findings, methods, or how studies compare — not live prices
+              or predictions.
             </motion.p>
             <motion.p
               className={styles.newsletterNote}
@@ -94,7 +96,7 @@ export default function Chat() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <CorpusStats stats={stats} />
+              <CorpusStats stats={stats} onPick={suggest} />
             </motion.div>
           </div>
         ) : (
