@@ -4,6 +4,7 @@ Allow: /
 # BitResearch is shared by direct link only. It loads for anyone holding the
 # URL, but it is not linked from btcedu.org and must stay out of search results.
 Disallow: /BitResearch
+Disallow: /bitresearch
 Disallow: /research
 
 # The SwIRL handbook bot is for staff. This path only forwards to it; the bot

@@ -11,12 +11,11 @@ const navLinks = [
   { to: '/contact', label: 'Contact' },
   { to: '/conference-2026', label: '2026 Conference' },
   { to: '/conference-2027', label: '2027 Conference' },
-  { to: '/BitResearch', label: 'BitResearch' },
-  // BitResearch is now linked from the site nav (soft launch), but it is still
-  // kept OUT of search engines: ChatLazy sets noindex,nofollow and
-  // public/robots.txt Disallows /BitResearch. That combination is deliberate —
-  // discoverable to visitors on the site, not indexed by Google. Do not remove
-  // the noindex/Disallow when adding nav visibility.
+  // BitResearch is deliberately NOT listed here. It is shared by direct link
+  // only: /BitResearch still loads for anyone holding the URL, but nothing on
+  // btcedu.org points at it, ChatLazy sets noindex,nofollow, and
+  // public/robots.txt Disallows the path. Adding it back to this list is what
+  // makes it public — the route itself is already reachable.
 ];
 
 export default function Header() {
