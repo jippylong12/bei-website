@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import Composer from './Composer';
 import CorpusStats from './CorpusStats';
@@ -6,7 +7,6 @@ import MessageList from './MessageList';
 import useChatStream from './useChatStream';
 import useCorpusStats from './useCorpusStats';
 import { exportTranscript } from './storage';
-import { API_BASE } from '../../config/api';
 import styles from './Chat.module.css';
 
 export default function Chat() {
@@ -80,14 +80,9 @@ export default function Chat() {
               transition={{ duration: 0.6, delay: 0.35 }}
             >
               Want a weekly digest of new Bitcoin research?{' '}
-              <a
-                className={styles.newsletterLink}
-                href={`${API_BASE}/newsletter`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link className={styles.newsletterLink} to="/BitResearch/newsletter">
                 Subscribe to BitResearch Weekly
-              </a>
+              </Link>
               .
             </motion.p>
             <motion.div

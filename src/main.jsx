@@ -10,6 +10,7 @@ import Conference2026 from './pages/Conference/Conference2026';
 import Conference2027 from './pages/Conference/Conference2027';
 import Donate from './pages/Donate/Donate';
 import ChatLazy from './pages/Chat/ChatLazy';
+import Newsletter from './pages/Newsletter/Newsletter';
 import PolicyBot from './pages/PolicyBot/PolicyBot';
 import './styles/global.css';
 
@@ -40,6 +41,8 @@ createRoot(document.getElementById('root')).render(
           {/* Reachable by direct URL only: nothing on the site links here, and
               it is noindex + robots-disallowed. See ChatLazy for why. */}
           <Route path="BitResearch" element={<ChatLazy />} />
+          <Route path="BitResearch/newsletter" element={<Newsletter />} />
+          <Route path="newsletter" element={<Navigate to="/BitResearch/newsletter" replace />} />
           <Route path="research" element={<Navigate to="/BitResearch" replace />} />
           {/* Same posture: unlinked, noindex, robots-disallowed. This one only
               forwards to the SwIRL handbook bot, which is hosted separately —
