@@ -111,7 +111,7 @@ export default function Newsletter() {
           </p>
 
           <p className={styles.note}>
-            One email a week, sent Monday morning. No advertising, and your address is never
+            One email a week, sent Friday morning. No advertising, and your address is never
             shared. Unsubscribe with one click from any issue.
           </p>
 
