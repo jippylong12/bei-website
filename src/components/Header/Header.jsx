@@ -11,6 +11,7 @@ const navLinks = [
   { to: '/contact', label: 'Contact' },
   { to: '/conference-2026', label: '2026 Conference' },
   { to: '/conference-2027', label: '2027 Conference' },
+  { to: '/maps', label: 'Map' },
   // BitResearch is deliberately NOT listed here. It is shared by direct link
   // only: /BitResearch still loads for anyone holding the URL, but nothing on
   // btcedu.org points at it, ChatLazy sets noindex,nofollow, and

@@ -1,0 +1,42 @@
+/* BEI look for the Bitcoin Classes Worldwide map shown at btcedu.org/maps.
+ *
+ * index.html, teaching-talks.json, world-110m.json and bei-classes.pdf in this folder are
+ * generated on Tiger (~/projects/bitcoin_corpus/teaching_talks/export_static.py, the public copy
+ * with no form answers or syllabus links); this file is the only one edited here. It is linked
+ * after the page's own styles. The selector below outranks the page's light and dark token
+ * rules, so the map always matches the site's navy, as the site has no light mode.
+ * Screen only: printing keeps the page's own light print layout. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@500;600&display=swap");
+
+@media screen {
+  :root:not([data-theme="bei-none"]) {
+    --bg: #01091C;
+    --surface: #111111;
+    --ink: #FFFFFF;
+    --ink-2: color-mix(in srgb, #EEEBE5 78%, #01091C);
+    --ink-3: color-mix(in srgb, #EEEBE5 58%, #01091C);
+    --line: color-mix(in srgb, #EEEBE5 18%, transparent);
+    --hover: color-mix(in srgb, #EEEBE5 7%, #111111);
+    --sel-bg: color-mix(in srgb, #B38A49 22%, #111111);
+    --tag-bg: color-mix(in srgb, #EEEBE5 10%, #111111);
+    --accent: #B38A49;
+    --accent-soft: color-mix(in srgb, #B38A49 18%, #111111);
+    --bar: #D8B080;
+    --map-bg: #050e24;
+    --land: #1b2436;
+    --land-has: #2f3b52;
+    /* field colours: no Bitcoin orange (DESIGN.md) */
+    --s1: #D8B080;
+    --s2: #EEEBE5;
+    --s3: #7d9cc6;
+    --s4: #7c8391;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --font-display: "Source Serif 4", Georgia, serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color-scheme: dark;
+  }
+  /* The site's header is above the frame, so less top space. */
+  .page { padding-block: 8px 24px; }
+  /* The frame grows to the page's full height, so a height in vh would keep growing with it. */
+  .panel { max-height: 640px; }
+}

@@ -12,6 +12,7 @@ import Donate from './pages/Donate/Donate';
 import ChatLazy from './pages/Chat/ChatLazy';
 import Newsletter from './pages/Newsletter/Newsletter';
 import PolicyBot from './pages/PolicyBot/PolicyBot';
+import Maps from './pages/Maps/Maps';
 import './styles/global.css';
 
 // GitHub Pages has no SPA rewrite; deep links land on 404.html, which is a copy
@@ -38,6 +39,7 @@ createRoot(document.getElementById('root')).render(
           {/* The single conference page split into per-year tabs; keep old links working */}
           <Route path="conference" element={<Navigate to="/conference-2027" replace />} />
           <Route path="donate" element={<Donate />} />
+          <Route path="maps" element={<Maps />} />
           {/* Reachable by direct URL only: nothing on the site links here, and
               it is noindex + robots-disallowed. See ChatLazy for why. */}
           <Route path="BitResearch" element={<ChatLazy />} />

@@ -1,0 +1,10 @@
+.wrap {
+  padding: var(--space-md) 0 var(--space-xl);
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--color-bg);
+}
