@@ -81,8 +81,6 @@ h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: c
 .chip[aria-pressed="false"] { color: var(--ink-3); background: transparent; }
 .chip[aria-pressed="false"] .sw { opacity: 0.25; }
 .sw { width: 9px; height: 9px; border-radius: 50%; flex: none; }
-.check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
-.check input { accent-color: var(--accent); margin: 0; }
 .search input { width: 100%; box-sizing: border-box; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: 14px var(--font-body); }
 .search input::placeholder { color: var(--ink-3); }
 
@@ -193,6 +191,18 @@ button.bar-row:hover { background: var(--hover); }
 .dl:hover { background: var(--hover); }
 .row-class { display: none; }
 
+/* Arrival, the same as the btcedu.org pages this map is shown among (their Hero): the title rises
+   30px over 0.7s at once; everything that needs the data waits, hidden, then rises 20px over 0.6s
+   when reveal() marks <body> "ready" (data drawn, failed, or slow). Nothing pops in or jumps. */
+.mast-text h1 { animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+body:not(.ready) .lede, body:not(.ready) .stats, body:not(.ready) .page > :not(.masthead) { visibility: hidden; }
+body.ready .lede, body.ready .stats, body.ready .page > :not(.masthead) { animation: enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+@keyframes rise { from { opacity: 0; transform: translateY(30px); } }
+@keyframes enter { from { opacity: 0; transform: translateY(20px); } }
+@media (prefers-reduced-motion: reduce) {
+  .mast-text h1, body.ready .lede, body.ready .stats, body.ready .page > :not(.masthead) { animation: none; }
+}
+
 /* Paper: light colors, no controls, the map full width, every directory row with its classes (shown on hover on screen). */
 @page { size: A4 portrait; margin: 12mm; }
 @media print {
@@ -202,7 +212,8 @@ button.bar-row:hover { background: var(--hover); }
     --map-bg: #eef2f6; --land: #dbe1e8; --land-has: #c5cfdb; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #8b94a3;
     color-scheme: light;
   }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; animation: none !important; }
+  .lede, .stats, .page > * { visibility: visible !important; }
   body { background: #fff; font-size: 11.5px; }
   .page { max-width: none; padding: 0; gap: 14px; }
   .toolbar, .zoom-ctl, .tip, .map-status, .map-note, .search, .detail, .dl { display: none !important; }
@@ -239,8 +250,6 @@ button.bar-row:hover { background: var(--hover); }
 
   <div class="toolbar" role="group" aria-label="Filters">
     <div class="chips" id="field-chips" role="group" aria-label="Field"></div>
-    <label class="check" for="f-shares"><input type="checkbox" id="f-shares"> Shares materials</label>
-    <label class="check" for="f-corpus"><input type="checkbox" id="f-corpus"> Has corpus papers</label>
     <a class="dl" href="bei-classes.pdf" download>Download PDF</a>
   </div>
 
@@ -321,7 +330,7 @@ button.bar-row:hover { background: var(--hover); }
   var VIEWS = { na: [[-128, 22], [-62, 55]], europe: [[-12, 36], [36, 63]] };
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var state = { fields: new Set(FIELDS.map(function (f) { return f.key; })), shares: false, corpus: false, q: "", selected: null, hover: null, view: "world" };
+  var state = { fields: new Set(FIELDS.map(function (f) { return f.key; })), q: "", selected: null, hover: null, view: "world" };
   var people = [];
   var byId = new Map();
   var features = [];
@@ -385,8 +394,6 @@ button.bar-row:hover { background: var(--hover); }
 
   function visible(p) {
     return state.fields.has(p.field.key) &&
-      (!state.shares || p.shares) &&
-      (!state.corpus || p.paperCount > 0) &&
       (!state.q || p.text.indexOf(state.q) !== -1);
   }
 
@@ -795,8 +802,6 @@ button.bar-row:hover { background: var(--hover); }
       });
       chips.append(b);
     });
-    $("#f-shares").addEventListener("change", function (e) { state.shares = e.target.checked; render(); });
-    $("#f-corpus").addEventListener("change", function (e) { state.corpus = e.target.checked; render(); });
     $("#q").addEventListener("input", function (e) { state.q = e.target.value.trim().toLowerCase(); render(); });
     document.querySelectorAll(".views button").forEach(function (b) {
       b.addEventListener("click", function () { applyView(b.dataset.view, true); });
@@ -859,11 +864,22 @@ button.bar-row:hover { background: var(--hover); }
     });
   }
 
+  // Show what waited for the data (see "Arrival" in the styles): once the map is drawn, or when
+  // the data fails or is slow, so an error or "Loading the map…" is never left hidden. The
+  // "mapready" event tells btcedu.org's frame (src/pages/Maps/Maps.jsx) to fit its height now.
+  function reveal() {
+    if (document.body.classList.contains("ready")) return;
+    document.body.classList.add("ready");
+    window.dispatchEvent(new Event("mapready"));
+  }
+  setTimeout(reveal, 1500);
+
   Promise.all([load("teaching-talks.json"), load("world-110m.json")])
-    .then(function (res) { init(res[0], res[1]); })
+    .then(function (res) { init(res[0], res[1]); reveal(); })
     .catch(function () {
       $("#map-status").textContent = "The map data did not load. Reload the page to try again.";
       $("#map-count").textContent = "No data loaded";
+      reveal();
     });
 })();
 </script>

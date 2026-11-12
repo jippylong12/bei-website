@@ -11,8 +11,14 @@ import styles from './Maps.module.css';
 // copy the four files into public/maps-app/, then commit and push.
 const MAP_URL = `${import.meta.env.BASE_URL}maps-app/index.html`;
 
-// Height used until the map has loaded and been measured.
+// Height used until the map page is ready and has been measured.
 const INITIAL_HEIGHT = 1600;
+
+// The map page arrives the way the site's other pages do: its title rises in, and the rest
+// rises in once its data is there (see "Arrival" in the map page's styles). Until then that
+// rest is hidden but shorter than it will be, so the frame keeps INITIAL_HEIGHT and fits to
+// the page only when the page marks <body> "ready" and says "mapready": the footer moves once,
+// not up and then down again.
 
 export default function Maps() {
   const frameRef = useRef(null);
@@ -31,12 +37,17 @@ export default function Maps() {
 
   const handleLoad = useCallback(() => {
     observerRef.current?.disconnect();
-    const body = frameRef.current?.contentDocument?.body;
+    const frame = frameRef.current;
+    const body = frame?.contentDocument?.body;
     if (!body) return;
-    fitToContent();
-    // The map page changes height as its data arrives and as people filter or select.
-    observerRef.current = new ResizeObserver(fitToContent);
-    observerRef.current.observe(body);
+    const follow = () => {
+      fitToContent();
+      // From then on the map page changes height as people filter or select.
+      observerRef.current = new ResizeObserver(fitToContent);
+      observerRef.current.observe(body);
+    };
+    if (body.classList.contains('ready')) follow();
+    else frame.contentWindow.addEventListener('mapready', follow, { once: true });
   }, [fitToContent]);
 
   useEffect(() => () => observerRef.current?.disconnect(), []);
