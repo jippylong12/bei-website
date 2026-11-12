@@ -1,3 +1,45 @@
+/* The year switch at the top of the page: each year with its city, the shown
+   year underlined in gold (as the Portal's tabs are). Underlined, not
+   filled, so it never competes with the gold Register button below. */
+.years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-xl);
+}
+
+.year {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.year:hover {
+  color: var(--color-text);
+  border-bottom-color: var(--color-border);
+}
+
+.year[aria-current='page'] {
+  color: var(--color-text);
+  border-bottom-color: var(--color-accent);
+}
+
+.yearNumber {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.yearPlace {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
 .registerButton {
   display: inline-block;
   padding: 0.75rem 2rem;

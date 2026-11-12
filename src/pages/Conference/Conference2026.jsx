@@ -44,12 +44,15 @@ const schedule = [
   },
 ];
 
-export default function Conference2026() {
+// The 2026 conference, as a year of the Conference page (Conference.jsx),
+// which hands it the year switch for the top of the page.
+export default function Conference2026({ yearSwitch }) {
   const base = import.meta.env.BASE_URL;
 
   return (
     <>
       <Hero
+        eyebrow={yearSwitch}
         title="Annual Bitcoin Education Institute Conference 2026"
         subtitle="A formal gathering for Bitcoin educators, researchers, and interdisciplinary academic work, held July 31, 2026 at George Washington University's Elliott School of International Affairs in Washington, DC."
       >

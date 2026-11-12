@@ -49,7 +49,10 @@
 
 .nav {
   display: flex;
-  gap: 2rem;
+  /* 1.5rem, not 2rem: set when Faculty made nine links, which at 2rem were
+     10px wider than the room beside the logo (the container stops growing at
+     1200px). Two Conference links have since become one: eight links. */
+  gap: 1.5rem;
   align-items: center;
 }
 
@@ -121,7 +124,7 @@
   display: none;
 }
 
-@media (max-width: 899px) {
+@media (max-width: 999px) {
   .hamburger {
     display: flex;
   }
@@ -168,9 +171,9 @@
   }
 }
 
-/* Two conference tabs make seven links: tighten the row before the
-   hamburger takes over at 899px */
-@media (min-width: 900px) and (max-width: 1220px) {
+/* Tighten the row before the hamburger takes over at 999px (set for nine
+   links, which did not fit below about 975px even tightened; now eight) */
+@media (min-width: 1000px) and (max-width: 1220px) {
   .nav {
     gap: 1.1rem;
   }

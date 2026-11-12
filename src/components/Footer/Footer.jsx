@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import styles from './Footer.module.css';
 
@@ -34,6 +35,7 @@ export default function Footer() {
         </div>
         <div className={styles.col}>
           <a href="mailto:info@btcedu.org">info@btcedu.org</a>
+          <Link to="/faculty/portal">Faculty Portal</Link>
           <motion.a
             href="https://pay.zaprite.com/pl_JCxJao3lKs"
             target="_blank"

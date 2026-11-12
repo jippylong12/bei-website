@@ -5,10 +5,13 @@ import styles from './Conference.module.css';
 const REGISTRATION_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSe3cSZKnGAQOO7lDALniVFbhEVgFLae6zNv5K8cTQD6EGH1cA/viewform';
 
-export default function Conference2027() {
+// The 2027 conference, as a year of the Conference page (Conference.jsx),
+// which hands it the year switch for the top of the page.
+export default function Conference2027({ yearSwitch }) {
   return (
     <>
       <Hero
+        eyebrow={yearSwitch}
         title="Annual Bitcoin Education Institute Conference 2027"
         subtitle="A formal gathering for Bitcoin educators, researchers, and interdisciplinary academic work — July 14, 2027 in Nashville, Tennessee."
       >

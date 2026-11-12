@@ -1,7 +1,16 @@
 import { motion } from 'motion/react';
 import styles from './Hero.module.css';
 
-export default function Hero({ title, subtitle, backgroundImage, backgroundPosition = 'center', children }) {
+// `eyebrow` (optional) sits above the title, e.g. the Conference page's year
+// switch; `children` go below the subtitle, e.g. a button.
+export default function Hero({
+  title,
+  subtitle,
+  eyebrow,
+  backgroundImage,
+  backgroundPosition = 'center',
+  children,
+}) {
   const hasBackground = !!backgroundImage;
   const heroClass = `${styles.hero} ${hasBackground ? styles.heroFull : styles.heroCompact}`;
 
@@ -16,6 +25,7 @@ export default function Hero({ title, subtitle, backgroundImage, backgroundPosit
       }}
     >
       <div className={`container ${styles.content}`}>
+        {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}
         <motion.h1
           className={styles.title}
           initial={{ opacity: 0, y: 30 }}

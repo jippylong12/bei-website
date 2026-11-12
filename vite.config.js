@@ -9,6 +9,10 @@ const API_TARGET = process.env.VITE_DEV_API_TARGET || 'http://localhost:8082'
 export default defineConfig({
   plugins: [react()],
   base: '/',
+  // `npm test` (Vitest). jsdom gives the component tests a browser-like DOM.
+  test: {
+    environment: 'jsdom',
+  },
   server: {
     // The app calls its OWN origin (/api/*); Vite proxies that to btc_rag, so
     // there is no separate API URL and no CORS in local dev. The SSE chat stream

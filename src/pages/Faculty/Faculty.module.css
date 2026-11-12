@@ -1,0 +1,755 @@
+/* The faculty pages: the public directory (Faculty.jsx, with People.jsx) and
+   the sign-in-only Portal (Portal.jsx: course materials and speakers).
+
+   They are styled with the same parts as the rest of the site, so they read as
+   one site: the gold button (Home's .ctaButton), the outlined button and the
+   bordered panel of rows (the 2026 agenda's .downloadButton and .schedule),
+   and the black card with a hairline border and a gold bar on top (Home's
+   focus cards). Colours, type and spacing all come from styles/global.css. */
+
+/* ---- The top of both pages ----
+   One row: the page title, and its one action beside it, over a hairline
+   (the line the site's Hero band ends with). The owner found the full Hero
+   band too tall for these pages, so the cards start just below the menu. */
+
+.section {
+  /* Tall enough that the footer stays put while a list is loading, instead
+     of jumping up and then down again. */
+  min-height: 70vh;
+  padding: var(--space-xl) 0 var(--section-padding);
+}
+
+.pageHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-md);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pageTitle {
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  line-height: 1.15;
+}
+
+.headAction {
+  display: inline-block;
+}
+
+.text {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* ---- Buttons ---- */
+
+/* The page's main action: solid gold, as "Register" and "Contact Us" are. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--bei-navy) !important;
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.cta:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* A secondary action: gold outline that fills on hover, as the agenda's
+   "Download" is. */
+.outline {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--color-accent) !important;
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.outline:hover:not(:disabled) {
+  color: var(--bei-navy) !important;
+  background: var(--color-accent);
+}
+
+.outline:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.lock {
+  width: 0.95em;
+  height: 0.95em;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.linkButton {
+  font: inherit;
+  color: var(--color-accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.linkButton:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.linkButton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ---- Search box, area buttons, counts (both pages) ---- */
+
+.input {
+  font: inherit;
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  min-width: 0;
+  transition: border-color 0.2s ease;
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--bei-cream) 50%, var(--bei-navy));
+}
+
+.input:hover {
+  border-color: color-mix(in srgb, var(--bei-cream) 40%, transparent);
+}
+
+.input:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-md);
+}
+
+.search {
+  flex: 1 1 280px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.areas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.areaButton {
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.areaButton:hover {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.areaActive,
+.areaActive:hover {
+  color: var(--bei-navy);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.areaCount {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+  margin-left: 0.15em;
+}
+
+.count {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin: var(--space-md) 0 var(--space-lg);
+}
+
+.empty {
+  padding: var(--space-xl);
+  color: var(--color-text-muted);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+}
+
+.problem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  color: #f0a3a3;
+}
+
+/* ---- Faculty Affiliates: a row per person, in the bordered panel of rows
+   the 2026 agenda uses. One row: [headshot] [name, title] [organisation]. ---- */
+
+.people {
+  list-style: none;
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+}
+
+.people > li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.person {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+/* The box is drawn here, so it shows while the picture is still fading in. */
+.portrait {
+  position: relative;
+  width: 76px;
+  border-radius: 4px;
+  background: var(--color-bg);
+}
+
+.headshot {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--color-bg);
+}
+
+/* No headshot on file: the person's initials in the same space. */
+.initials {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-accent-subtle);
+}
+
+/* The organisation's logo, set into the headshot's corner like a seal. */
+.seal {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px var(--color-bg-elevated);
+}
+
+.personMain {
+  min-width: 0;
+}
+
+.name {
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.role {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.org {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-accent-subtle);
+}
+
+/* ---- Course materials: messages and sign-in ---- */
+
+.notice {
+  max-width: 460px;
+  margin: 0 auto;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.noticeWide {
+  max-width: none;
+}
+
+.notice:not(:empty) {
+  margin-bottom: var(--space-md);
+  padding: 0.75rem 1rem;
+  border-left: 2px solid currentColor;
+  background: var(--color-bg-elevated);
+}
+
+.ok {
+  color: var(--color-accent-subtle);
+}
+
+.err {
+  color: #f0a3a3;
+}
+
+/* A card like the site's others, with the Home page's gold bar on top. */
+.panel {
+  position: relative;
+  overflow: hidden;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-sm);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-accent);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+/* On the black card the fields sit back into the navy. */
+.panel .input {
+  background: var(--color-bg);
+}
+
+.panel .cta {
+  margin-top: var(--space-xs);
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.heading {
+  font-size: 1.75rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: var(--space-xs);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.note a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* ---- The Portal's tabs: Course Materials | Speakers, with "Signed in"
+   on the right. Underlined, not filled, so they never look like the gold
+   area buttons in the Speakers tab. ---- */
+
+.tabBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-lg);
+}
+
+.tab {
+  padding: 0.35rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--color-text);
+  border-bottom-color: var(--color-border);
+}
+
+.tab[aria-current='page'] {
+  color: var(--color-text);
+  border-bottom-color: var(--color-accent);
+}
+
+.signedIn {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Course materials: the browser ---- */
+
+.crumbs {
+  margin-top: var(--space-xl);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.folderTitle {
+  margin-top: var(--space-xl);
+  font-size: 1.75rem;
+  scroll-margin-top: calc(var(--header-height) + var(--space-md));
+}
+
+.crumbs + .folderTitle {
+  margin-top: var(--space-xs);
+}
+
+.folderTitle:focus {
+  outline: none; /* focused by script after a folder opens, not by the Tab key */
+}
+
+.folderSubtitle {
+  margin-top: 0.2rem;
+  color: var(--color-text-muted);
+}
+
+.folderTitle + .count,
+.folderSubtitle + .count {
+  margin-top: var(--space-xs);
+}
+
+/* The Portal: a bordered panel of rows, like the 2026 agenda, at the top
+   level and inside every folder. One row: [icon or file type] [name] [size]
+   [action]. A folder is a button across the whole row; a file is a row with
+   a Download button. */
+.rows {
+  list-style: none;
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+}
+
+.rows > li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: 0.9rem var(--space-md);
+  text-align: left;
+}
+
+.rowButton {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.rowButton:hover {
+  background: color-mix(in srgb, var(--bei-cream) 5%, transparent);
+}
+
+.rowButton:focus-visible {
+  outline-offset: -3px;
+}
+
+.folderIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+  justify-self: center;
+  fill: color-mix(in srgb, var(--bei-gold) 22%, transparent);
+  stroke: var(--color-accent);
+  stroke-width: 1.4;
+}
+
+.fileType {
+  justify-self: center;
+  min-width: 3rem;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fileName {
+  font-size: 0.975rem;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+/* A row's second line: the course, or the folder a search result is in. */
+.rowDetail {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.rowMeta {
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+.chevron {
+  width: 1.5rem;
+  font-size: 1.4rem;
+  line-height: 1;
+  text-align: center;
+  color: var(--color-accent);
+}
+
+/* The outlined button, a size down for a row of a list. */
+.download {
+  min-width: 6.75rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ---- Moving between views ----
+   The same entrance as every other page of the site, so these pages arrive
+   the way the others do. The Hero (components/Hero/Hero.jsx) brings a page's
+   title up 30px over 0.7s, with the line under it following 0.15s later, and
+   the page sections bring their content up 20px over 0.6s, all on one
+   ease-out curve. Here:
+   - .rise: the page title.
+   - .riseNext: the button beside it.
+   - .enter: content as it appears (the list once it has arrived, the other
+     tab, another folder, the sign-in form).
+   Never put one .enter inside another that appears at the same time: the two
+   rises would add up to twice the distance.
+
+   "backwards" (not "both") holds only the starting frame, during the wait.
+   Once done, nothing is held, so the hover effects work as usual.
+
+   A "Loading…" line waits before it shows, so a quick answer never flashes
+   it. Pictures fade in once loaded. With reduced motion all of it is
+   instant. */
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.riseNext {
+  animation: enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
+}
+
+.enter {
+  animation: enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.waiting {
+  animation: appear 0.2s ease 0.4s both;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+.picture {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pictureShown {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .riseNext,
+  .enter,
+  .waiting {
+    animation: none;
+  }
+
+  .picture {
+    transition: none;
+  }
+}
+
+/* ---- Phones ---- */
+
+@media (max-width: 640px) {
+  .section {
+    padding-top: var(--space-lg);
+  }
+
+  /* The title row stays on one line on most phones: a smaller title, and its
+     button a size down (as in a row of a list). Narrower screens wrap it.
+     The headings below shrink with it, so the title stays the largest. */
+  .pageHead {
+    column-gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+
+  .pageHead .cta,
+  .pageHead .outline {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .heading,
+  .folderTitle {
+    font-size: 1.35rem;
+  }
+
+  .search {
+    max-width: none;
+  }
+
+  /* A person's row: the headshot beside the name, title and organisation,
+     one under the other. */
+  .person {
+    grid-template-columns: 60px minmax(0, 1fr);
+    column-gap: var(--space-sm);
+    row-gap: 0.2rem;
+    padding: 0.8rem var(--space-sm);
+  }
+
+  .portrait {
+    width: 60px;
+    grid-row: 1 / span 2;
+  }
+
+  .org {
+    grid-column: 2;
+    font-size: 0.9rem;
+  }
+
+  .name {
+    font-size: 1.05rem;
+  }
+
+  .panel {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  /* A row becomes two lines: the name, then its size, with the action
+     beside both. */
+  .row {
+    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+    row-gap: 0.3rem;
+    padding: 0.8rem var(--space-sm);
+  }
+
+  .folderIcon,
+  .fileType {
+    grid-row: 1 / span 2;
+  }
+
+  .rowMeta {
+    grid-column: 2;
+  }
+
+  .row > .download,
+  .chevron {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  .download {
+    min-width: 0;
+  }
+}

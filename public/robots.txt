@@ -11,3 +11,8 @@ Disallow: /research
 # itself is hosted separately and never served from this site. Keeping it out of
 # search matters more now that the bot itself has no login.
 Disallow: /handbot
+
+# The Portal (course materials) is for BEI faculty, who sign in with a
+# password. There is nothing there for a search engine. (The Faculty
+# Affiliates page at /faculty is public.)
+Disallow: /faculty/portal

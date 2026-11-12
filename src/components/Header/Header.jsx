@@ -7,10 +7,10 @@ const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/what-we-do', label: 'What We Do' },
   { to: '/about', label: 'About' },
+  { to: '/faculty', label: 'Faculty' },
   { to: '/donate', label: 'Donate' },
   { to: '/contact', label: 'Contact' },
-  { to: '/conference-2026', label: '2026 Conference' },
-  { to: '/conference-2027', label: '2027 Conference' },
+  { to: '/conference', label: 'Conference' },
   { to: '/maps', label: 'Map' },
   // BitResearch is deliberately NOT listed here. It is shared by direct link
   // only: /BitResearch still loads for anyone holding the URL, but nothing on
