@@ -1,8 +1,8 @@
 // How the site moves from page to page (App.jsx): one mount and one fade per
-// new page, nothing for a change of query. No network.
+// new page, nothing for a change of query. And the menu it shows. No network.
 import { useEffect } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { Link, MemoryRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 
@@ -81,5 +81,22 @@ describe('moving between pages', () => {
 
     expect(mounts).toEqual(['First', 'Second']);
     expect(window.scrollTo).not.toHaveBeenCalled();
+  });
+});
+
+describe('the menu', () => {
+  it('lists the site pages, without About (taken off on 2026-11-13)', () => {
+    show();
+
+    const menu = screen.getAllByRole('navigation')[0];
+    expect(within(menu).getAllByRole('link').map((link) => link.textContent)).toEqual([
+      'Home',
+      'What We Do',
+      'Faculty',
+      'Donate',
+      'Contact',
+      'Conference',
+      'Map',
+    ]);
   });
 });

@@ -55,12 +55,8 @@ export const signOut = (token) => call('/api/faculty/sign-out', { method: 'POST'
 
 export const fetchMaterials = (token) => call('/api/faculty/materials', { token });
 
+// The speakers: names, emails and details, no pictures.
 export const fetchSpeakers = (token) => call('/api/faculty/speakers', { token });
-
-// The speakers' pictures. Like imageUrl, but from the speaker list; the
-// names come only with the signed-in list.
-export const speakerImageUrl = (kind, name) =>
-  `${API_BASE}/api/faculty/speakers/images/${kind}/${encodeURIComponent(name)}`;
 
 // Start a download of one materials file. A browser cannot send the session
 // token when it follows a link, so the backend first hands out a link that

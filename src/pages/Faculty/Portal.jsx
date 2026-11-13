@@ -8,7 +8,6 @@ import {
   saveToken,
   signIn,
   signOut,
-  speakerImageUrl,
 } from './facultyApi';
 import People from './People';
 import styles from './Faculty.module.css';
@@ -17,7 +16,8 @@ import styles from './Faculty.module.css';
 // that BEI shares with all of them, and then have two tabs:
 //
 //   Course Materials  /faculty/portal               browse the folders, download files
-//   Speakers          /faculty/portal?tab=speakers  the conference speakers
+//   Speakers          /faculty/portal?tab=speakers  the conference speakers: names,
+//                                                  emails and details, no pictures
 //
 // Nothing confidential is in this site's code. The folder listing, every file
 // and the speaker list come from the backend, and only for a signed-in visitor.
@@ -281,7 +281,7 @@ function Speakers({ state, onRetry }) {
   }
   return (
     <div className={styles.enter}>
-      <People people={state.people} imageUrl={speakerImageUrl} searchLabel="Search the speakers" />
+      <People people={state.people} searchLabel="Search the speakers" />
     </div>
   );
 }

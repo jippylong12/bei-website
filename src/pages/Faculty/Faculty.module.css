@@ -311,6 +311,26 @@
   color: var(--color-accent-subtle);
 }
 
+/* A list without pictures (the Portal's speakers): [name, title, details,
+   email] [organisation]. */
+.personPlain {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  padding: var(--space-md);
+}
+
+.email {
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-accent);
+  overflow-wrap: anywhere;
+}
+
+.email:hover {
+  text-decoration: underline;
+}
+
 /* ---- Course materials: messages and sign-in ---- */
 
 .notice {
@@ -716,6 +736,15 @@
   .org {
     grid-column: 2;
     font-size: 0.9rem;
+  }
+
+  /* Without pictures: one column, the organisation under the rest. */
+  .personPlain {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .personPlain .org {
+    grid-column: 1;
   }
 
   .name {

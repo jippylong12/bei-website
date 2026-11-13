@@ -51,18 +51,29 @@ const TREE = {
   files: [{ name: 'Grace Hopper_Compilers.zip', path: 'Grace Hopper_Compilers.zip', bytes: 87 * MB }],
 };
 
-// The second has blanks and no pictures, as some real rows do.
+// As the backend sends them: no pictures. The second has blanks, as some real
+// rows do.
 const SPEAKERS = [
   {
     first_name: 'Charles',
     last_name: 'Babbage',
+    email: 'charles@example.org',
     title: 'Inventor',
     affiliation: 'Example Engines',
+    location: 'London',
     area: 'Developer',
-    headshot: 'charles-babbage-1a2b3c4d.webp',
-    logo: 'example-engines-5e6f7a8b.png',
+    class_speaker: 'Agreed',
   },
-  { first_name: 'Emmy', last_name: 'Noether', title: '', affiliation: '', area: 'Finance', headshot: '', logo: '' },
+  {
+    first_name: 'Emmy',
+    last_name: 'Noether',
+    email: '',
+    title: '',
+    affiliation: '',
+    location: '',
+    area: 'Finance',
+    class_speaker: '',
+  },
 ];
 
 const materials = (tree = TREE) => reply(200, { ok: true, materials: tree });
@@ -307,7 +318,7 @@ describe('the tabs', () => {
     expect(screen.getByRole('link', { name: 'Speakers' }).getAttribute('href')).toBe('/faculty/portal?tab=speakers');
   });
 
-  it('Speakers lists the speakers, with pictures from the speaker list', async () => {
+  it('Speakers lists the speakers as text: name, email and details, no pictures', async () => {
     const calls = await openMaterials();
 
     openTab('Speakers');
@@ -322,12 +333,17 @@ describe('the tabs', () => {
     expect(screen.getByText('2 people')).toBeTruthy();
     const charles = screen.getByRole('heading', { level: 2, name: 'Charles Babbage' }).closest('li');
     expect(within(charles).getByText('Example Engines')).toBeTruthy();
-    const [headshot, logo] = charles.querySelectorAll('img');
-    expect(headshot.getAttribute('src')).toBe('/api/faculty/speakers/images/headshots/charles-babbage-1a2b3c4d.webp');
-    expect(logo.getAttribute('src')).toBe('/api/faculty/speakers/images/logos/example-engines-5e6f7a8b.png');
-    // Emmy has no headshot: her initials stand in.
+    expect(within(charles).getByText('Inventor')).toBeTruthy();
+    expect(within(charles).getByText('London · Developer · Class speaker: Agreed')).toBeTruthy();
+    const email = within(charles).getByRole('link', { name: 'charles@example.org' });
+    expect(email.getAttribute('href')).toBe('mailto:charles@example.org');
+    // No pictures, and no initials standing in for one.
+    expect(charles.closest('ul').querySelectorAll('img')).toHaveLength(0);
+    expect(screen.queryByText('CB')).toBeNull();
+    // Emmy has only her name and area: no empty lines, no email link.
     const emmy = screen.getByRole('heading', { level: 2, name: 'Emmy Noether' }).closest('li');
-    expect(within(emmy).getByText('EN')).toBeTruthy();
+    expect([...emmy.querySelectorAll('p')].map((p) => p.textContent)).toEqual(['Finance']);
+    expect(within(emmy).queryByRole('link')).toBeNull();
   });
 
   it('Speakers can be searched and filtered by area', async () => {

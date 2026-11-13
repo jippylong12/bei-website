@@ -3,9 +3,12 @@ import styles from './Faculty.module.css';
 
 // A searchable list of people, one row each: [headshot] [name, title]
 // [organisation]. The Faculty Affiliates page and the Portal's Speakers both
-// use it. `imageUrl(kind, name)` says where a row's pictures are, since the
-// two lists keep theirs apart; `searchLabel` names the search box for screen
-// readers.
+// use it. `imageUrl(kind, name)` says where a row's pictures are; without it
+// the list has no pictures at all (the Speakers: BEI has no photos of them).
+// A row also shows what else it carries: the place, area and class-speaker
+// note under the title, and the email as a link (only the signed-in speaker
+// list has these; the public directory never sends them). `searchLabel` names
+// the search box for screen readers.
 export default function People({ people, imageUrl, searchLabel }) {
   const [query, setQuery] = useState('');
   const [area, setArea] = useState(''); // '' = every area
@@ -82,13 +85,19 @@ export default function People({ people, imageUrl, searchLabel }) {
       ) : (
         <ul className={styles.people}>
           {shown.map(({ person, index }) => (
-            <li key={index} className={styles.person}>
-              <Portrait person={person} imageUrl={imageUrl} />
+            <li key={index} className={`${styles.person} ${imageUrl ? '' : styles.personPlain}`}>
+              {imageUrl && <Portrait person={person} imageUrl={imageUrl} />}
               <div className={styles.personMain}>
                 <h2 className={styles.name}>
                   {person.first_name} {person.last_name}
                 </h2>
                 {person.title && <p className={styles.role}>{person.title}</p>}
+                {details(person) && <p className={styles.role}>{details(person)}</p>}
+                {person.email && (
+                  <a className={styles.email} href={`mailto:${person.email}`}>
+                    {person.email}
+                  </a>
+                )}
               </div>
               {person.affiliation && <p className={styles.org}>{person.affiliation}</p>}
             </li>
@@ -98,6 +107,13 @@ export default function People({ people, imageUrl, searchLabel }) {
     </>
   );
 }
+
+// A row's second line of detail, such as "Austin · Mining · Class speaker:
+// Agreed", or '' when it has none of them.
+const details = (person) =>
+  [person.location, person.area, person.class_speaker && `Class speaker: ${person.class_speaker}`]
+    .filter(Boolean)
+    .join(' · ');
 
 // The headshot with the organisation's logo set into its corner. Both are
 // decorative: the name and the organisation are in text right beside them. If
