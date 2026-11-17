@@ -41,9 +41,10 @@ lead to this page.
 
 - **`/faculty`** (`Faculty.jsx`), public: Faculty Affiliates. A row for each
   person (headshot, name, title, organisation, and their bio, written in the
-  first person; a long one shows four lines and "Read more"), with search and
-  an area filter (`People.jsx`, which the Portal's Speakers tab uses too). The
-  bios come from the backend's roster (`docs/FACULTY.md` in `btc_rag`).
+  third person in one professional voice, never the first; a long one shows
+  four lines and "Read more"), with search and an area filter (`People.jsx`,
+  which the Portal's Speakers tab uses too). The bios come from the backend's
+  roster (`docs/FACULTY.md` in `btc_rag`).
 - **`/faculty/portal`** (`Portal.jsx`), for faculty only. A person enters the
   one password BEI shares with all faculty, then has two tabs: **Course
   Materials** (browse the folders and download files) and **Speakers**
