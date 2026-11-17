@@ -16,8 +16,9 @@ const PEOPLE = [
     area: 'Developer',
     headshot: 'ada-lovelace.webp',
     logo: 'example-university.png',
+    bio: 'I wrote the first program, for an engine not yet built.',
   },
-  { first_name: 'Grace', last_name: 'Hopper', title: '', affiliation: '', area: '', headshot: '', logo: '' },
+  { first_name: 'Grace', last_name: 'Hopper', title: '', affiliation: '', area: '', headshot: '', logo: '', bio: '' },
   {
     first_name: 'Alan',
     last_name: 'Turing',
@@ -79,6 +80,40 @@ describe('the directory', () => {
     const ada = within(card('Ada Lovelace'));
     expect(ada.getByText('Professor of Mathematics')).toBeTruthy();
     expect(ada.getByText('Example University')).toBeTruthy();
+  });
+
+  it("shows a person's bio in their row, and nothing for someone without one", async () => {
+    await openDirectory();
+
+    const bio = within(card('Ada Lovelace')).getByText('I wrote the first program, for an engine not yet built.');
+    expect(bio.parentElement.className).toMatch(/bio/);
+    expect(card('Ada Lovelace').className).toMatch(/personWithBio/);
+    // A short bio is shown whole, with nothing to open.
+    expect(bio.className).not.toMatch(/bioShort/);
+    expect(within(card('Ada Lovelace')).queryByRole('button')).toBeNull();
+
+    // Alan has no bio field at all, Grace an empty one: neither gets a bio line.
+    for (const name of ['Alan Turing', 'Grace Hopper']) {
+      expect(card(name).querySelector('[class*="bio"]')).toBeNull();
+      expect(card(name).className).not.toMatch(/personWithBio/);
+    }
+  });
+
+  it('shows the first lines of a long bio, and the rest on "Read more"', async () => {
+    const long = `I study engines. ${'I have built many of them, large and small. '.repeat(10)}`.trim();
+    await openDirectory([{ ...PEOPLE[0], bio: long }]);
+
+    const bio = within(card('Ada Lovelace')).getByText(long); // all of it is in the page
+    expect(bio.className).toMatch(/bioShort/);
+    const more = within(card('Ada Lovelace')).getByRole('button', { name: 'Read more of Ada Lovelace’s bio' });
+    expect(more.getAttribute('aria-expanded')).toBe('false');
+
+    fireEvent.click(more);
+
+    expect(bio.className).not.toMatch(/bioShort/);
+    expect(more.getAttribute('aria-expanded')).toBe('true');
+    expect(more.textContent).toBe('Show less');
+    expect(more.getAttribute('aria-label')).toBe('Show less of Ada Lovelace’s bio');
   });
 
   it('shows each headshot with the organisation logo set into it', async () => {

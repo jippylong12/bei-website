@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import styles from './Faculty.module.css';
 
 // A searchable list of people, one row each: [headshot] [name, title]
-// [organisation]. The Faculty Affiliates page and the Portal's Speakers both
-// use it. `imageUrl(kind, name)` says where a row's pictures are; without it
+// [organisation], with the person's bio, if they have one, under the name.
+// The Faculty Affiliates page and the Portal's Speakers both use it. `imageUrl(kind, name)` says where a row's pictures are; without it
 // the list has no pictures at all (the Speakers: BEI has no photos of them).
 // A row also shows what else it carries: the place, area and class-speaker
 // note under the title, and the email as a link (only the signed-in speaker
@@ -114,7 +114,12 @@ function PersonRows({ shown, imageUrl }) {
   return (
     <ul className={styles.people}>
       {shown.map(({ person, index }) => (
-        <li key={index} className={`${styles.person} ${imageUrl ? '' : styles.personPlain}`}>
+        <li
+          key={index}
+          className={[styles.person, !imageUrl && styles.personPlain, person.bio && styles.personWithBio]
+            .filter(Boolean)
+            .join(' ')}
+        >
           {imageUrl && <Portrait person={person} imageUrl={imageUrl} />}
           <div className={styles.personMain}>
             <h2 className={styles.name}>
@@ -129,9 +134,38 @@ function PersonRows({ shown, imageUrl }) {
             )}
           </div>
           {person.affiliation && <p className={styles.org}>{person.affiliation}</p>}
+          {person.bio && <Bio person={person} />}
         </li>
       ))}
     </ul>
+  );
+}
+
+// A bio longer than this many characters (more than four lines across a
+// wide screen) shows its first four lines, with "Read more" to open the rest.
+// All of it is in the page either way: the shortening is only what is drawn,
+// so screen readers and search engines get the whole bio.
+const LONG_BIO = 320;
+
+function Bio({ person }) {
+  const [whole, setWhole] = useState(false);
+  const long = person.bio.length > LONG_BIO;
+  const action = whole ? 'Show less' : 'Read more';
+  return (
+    <div className={styles.bio}>
+      <p className={long && !whole ? styles.bioShort : undefined}>{person.bio}</p>
+      {long && (
+        <button
+          className={`${styles.linkButton} ${styles.bioMore}`}
+          type="button"
+          aria-expanded={whole}
+          aria-label={`${action} of ${person.first_name} ${person.last_name}’s bio`}
+          onClick={() => setWhole(!whole)}
+        >
+          {action}
+        </button>
+      )}
+    </div>
   );
 }
 

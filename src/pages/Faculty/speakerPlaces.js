@@ -71,3 +71,57 @@ export function pinsFor(places, scale) {
   }
   return pins.map((pin) => ({ ...pin, r: pinRadius(pin.count) / scale }));
 }
+
+// The size of the names on the map, in pixels.
+export const TAG_SIZE = 11.5;
+
+// The names that stay on the map beside the bigger pins, so it reads without
+// pointing at anything: [{ pin, text, anchor, x, y }], x and y in map units
+// (y is the middle of the text). Every pin for at least `least` speakers gets
+// one, the biggest first, wherever it fits: right of the pin, else left,
+// above, below, never over another name, another pin or the edge of the map.
+// A name that fits nowhere is left off (the place is still in the panel). A
+// pin for several places is named after the one it stands on: "Los Angeles
+// +2". The width of a name is guessed from its length, generously.
+export function tagsFor(pins, scale, least = 2) {
+  const unit = 1 / scale; // map units in a screen pixel
+  const height = TAG_SIZE * 1.3 * unit;
+  const gap = 4 * unit;
+  const taken = [];
+  const clear = (box) =>
+    box.left >= 0 &&
+    box.right <= MAP_WIDTH &&
+    box.top >= 0 &&
+    box.bottom <= MAP_HEIGHT &&
+    !taken.some((other) => box.left < other.right && other.left < box.right && box.top < other.bottom && other.top < box.bottom) &&
+    !pins.some((pin) => {
+      const dx = Math.max(box.left - pin.x, 0, pin.x - box.right);
+      const dy = Math.max(box.top - pin.y, 0, pin.y - box.bottom);
+      return Math.hypot(dx, dy) < pin.r;
+    });
+
+  const tags = [];
+  for (const pin of pins) {
+    if (pin.count < least) continue;
+    const more = pin.places.length - 1;
+    const text = more ? `${pin.places[0].name} +${more}` : pin.places[0].name;
+    const width = text.length * TAG_SIZE * 0.6 * unit;
+    const { x, y, r } = pin;
+    const spots = [
+      ['start', x + r + gap, y - height / 2],
+      ['end', x - r - gap - width, y - height / 2],
+      ['middle', x - width / 2, y - r - gap / 2 - height],
+      ['middle', x - width / 2, y + r + gap / 2],
+    ];
+    for (const [anchor, left, top] of spots) {
+      const box = { left, right: left + width, top, bottom: top + height };
+      if (clear(box)) {
+        taken.push(box);
+        const at = { start: box.left, end: box.right, middle: x }[anchor];
+        tags.push({ pin, text, anchor, x: at, y: top + height / 2 });
+        break;
+      }
+    }
+  }
+  return tags;
+}

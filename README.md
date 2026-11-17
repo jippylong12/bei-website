@@ -40,8 +40,10 @@ lead to this page.
 `src/pages/Faculty/` holds two pages:
 
 - **`/faculty`** (`Faculty.jsx`), public: Faculty Affiliates. A row for each
-  person (headshot, name, title, organisation), with search and an area filter
-  (`People.jsx`, which the Portal's Speakers tab uses too).
+  person (headshot, name, title, organisation, and their bio, written in the
+  first person; a long one shows four lines and "Read more"), with search and
+  an area filter (`People.jsx`, which the Portal's Speakers tab uses too). The
+  bios come from the backend's roster (`docs/FACULTY.md` in `btc_rag`).
 - **`/faculty/portal`** (`Portal.jsx`), for faculty only. A person enters the
   one password BEI shares with all faculty, then has two tabs: **Course
   Materials** (browse the folders and download files) and **Speakers**
@@ -51,12 +53,15 @@ lead to this page.
 The Speakers tab shows the speakers as a **List** or on a **Map**
 (`/faculty/portal?tab=speakers&view=map`; the switch is at the end of the
 count line). The map (`SpeakerMap.jsx`, with the grouping in
-`speakerPlaces.js`) is a map of the United States with a gold pin for each
-place, sized by its number of speakers, beside a panel listing every place;
-choosing a place, by its pin or in the panel, lists its speakers there. The
-search and area filter apply to both views and keep what was typed when the
-view changes. Places so close that their pins would cover each other share a
-pin (more of them on a phone). A place outside the United States, and speakers
+`speakerPlaces.js`) is a map of the United States, drawn like an atlas plate
+in the brand's navy and gold, with a gold pin for each place, sized by its
+number of speakers (a plain dot is one), and the names of the bigger places
+beside their pins. Beside it, as tall as the map, a panel lists every place
+with a bar for its share; choosing a place, by its pin or in the panel, lists
+its speakers there, and pointing at a place in either lights it in the other.
+The search and area filter apply to both views and keep what was typed when
+the view changes. Places so close that their pins would cover each other share
+a pin (more of them on a phone). A place outside the United States, and speakers
 whose place is not known, are in the panel and in the note under the map.
 Where each place is arrives with the speakers: the backend adds each one's
 `lat` and `lon` from its `places.csv` (see `docs/FACULTY.md` in `btc_rag`), so

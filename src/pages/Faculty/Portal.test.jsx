@@ -516,7 +516,11 @@ describe('the speakers map', () => {
       .getAllByRole('button')
       .map((b) => `${b.textContent} | ${b.getAttribute('aria-label')}`);
   const pins = () => [...document.querySelectorAll('[data-places]')];
-  const pinNames = () => pins().map((pin) => `${pin.dataset.places} ${pin.querySelector('text').textContent}`);
+  const pin = (places) => pins().find((p) => p.dataset.places === places);
+  // Each pin by what it is called and the number it shows ('' for a dot).
+  const pinNames = () =>
+    pins().map((p) => `${p.querySelector('title').textContent} [${p.querySelector('text')?.textContent ?? ''}]`);
+  const tags = () => [...document.querySelectorAll(`.${styles.placeTag}`)].map((t) => t.textContent);
   const names = (level = 3) => screen.getAllByRole('heading', { level }).map((h) => h.textContent);
 
   it('is the second view of the speakers, beside the list', async () => {
@@ -535,7 +539,10 @@ describe('the speakers map', () => {
   it('has a pin for each place in the United States and lists every place beside it', async () => {
     await openSpeakers();
 
-    expect(pinNames()).toEqual(['Austin 2', 'Seattle 1']);
+    // A place with one speaker is a plain dot; a bigger one shows its number,
+    // and its name stays beside it.
+    expect(pinNames()).toEqual(['Austin: 2 speakers [2]', 'Seattle: 1 speaker []']);
+    expect(tags()).toEqual(['Austin']);
     expect(panelHeading()).toBe('3 places');
     // Most speakers first, the speakers with no known place last.
     expect(placeButtons()).toEqual([
@@ -544,9 +551,40 @@ describe('the speakers map', () => {
       'Seattle 1 | Seattle: 1 speaker',
       'Place not known 1 | Place not known: 1 speaker',
     ]);
-    // London and the unknown place are not on the map; the note says so.
-    const note = document.querySelector('figcaption');
+    // London and the unknown place are not on the map; the note under it says
+    // so, beside the key to the pins (which screen readers skip).
+    const note = document.querySelector(`.${styles.mapNote}`);
     expect(note.textContent).toBe('Not on the map: London (1) · Place not known (1)');
+    expect(note.closest('figcaption')).toBeTruthy();
+    expect(document.querySelector(`.${styles.mapKey}`).getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('lights the pin of the place pointed at in the panel, and the row of the pin pointed at', async () => {
+    await openSpeakers();
+    const row = screen.getByRole('button', { name: 'Seattle: 1 speaker' });
+
+    fireEvent.mouseEnter(row);
+    expect(pin('Seattle').getAttribute('class')).toContain(styles.pinPointed);
+    expect(document.querySelector(`.${styles.pinLabel}`).textContent).toBe('Seattle');
+    fireEvent.mouseLeave(row);
+    expect(pin('Seattle').getAttribute('class')).not.toContain(styles.pinPointed);
+    expect(document.querySelector(`.${styles.pinLabel}`)).toBeNull();
+
+    // The keyboard does the same.
+    fireEvent.focus(row);
+    expect(pin('Seattle').getAttribute('class')).toContain(styles.pinPointed);
+    fireEvent.blur(row);
+
+    // Pointing at Austin's pin lights its row, and its white name takes the
+    // place of the quiet one beside it.
+    fireEvent.mouseEnter(pin('Austin'));
+    const austinRow = screen.getByRole('button', { name: 'Austin: 2 speakers' });
+    expect(austinRow.className).toContain(styles.placeLit);
+    expect(document.querySelector(`.${styles.pinLabel}`).textContent).toBe('Austin');
+    expect(tags()).toEqual([]);
+    fireEvent.mouseLeave(pin('Austin'));
+    expect(austinRow.className).not.toContain(styles.placeLit);
+    expect(tags()).toEqual(['Austin']);
   });
 
   it('lists the speakers of a place chosen in the panel, and goes back to every place', async () => {
@@ -568,16 +606,18 @@ describe('the speakers map', () => {
     const grace = screen.getByRole('heading', { level: 3, name: 'Grace Hopper' }).closest('li');
     expect(within(grace).queryByRole('link')).toBeNull();
     expect(within(grace).getByText('Rear Admiral')).toBeTruthy();
-    // Its pin is marked, with its name beside it.
-    const austin = pins().find((pin) => pin.dataset.places === 'Austin');
+    // Its pin is marked, with its name beside it; the other pins step back.
+    const austin = pin('Austin');
     expect(austin.getAttribute('class')).toContain(styles.pinOpen);
     expect(document.querySelector(`.${styles.pinLabel}`).textContent).toBe('Austin');
+    expect(document.querySelector(`svg.${styles.mapFocused}`)).toBeTruthy();
 
     click('All places');
 
     expect(panelHeading()).toBe('3 places');
     expect(austin.getAttribute('class')).not.toContain(styles.pinOpen);
     expect(document.querySelector(`.${styles.pinLabel}`)).toBeNull();
+    expect(document.querySelector(`svg.${styles.mapFocused}`)).toBeNull();
   });
 
   it('opens a place from its pin, and a place off the map from the note', async () => {
@@ -602,7 +642,8 @@ describe('the speakers map', () => {
     await openSpeakers();
 
     type('Search the speakers', 'hopper');
-    expect(pinNames()).toEqual(['Austin 1']);
+    expect(pinNames()).toEqual(['Austin: 1 speaker []']);
+    expect(tags()).toEqual([]); // one speaker: a dot, and no name beside it
     expect(placeButtons()).toEqual(['Austin 1 | Austin: 1 speaker']);
     expect(panelHeading()).toBe('1 place');
 

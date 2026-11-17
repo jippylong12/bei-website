@@ -6,7 +6,7 @@ import People from './People';
 import styles from './Faculty.module.css';
 
 // The public Faculty Affiliates page, at /faculty: a row per person with a
-// headshot, name, title and organisation. The course materials and the
+// headshot, name, title, organisation and bio. The course materials and the
 // speakers are the separate, sign-in-only Portal (Portal.jsx), reached from
 // the button beside the page title.
 //
