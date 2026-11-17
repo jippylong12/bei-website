@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Component, Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   downloadFile,
@@ -12,12 +12,18 @@ import {
 import People from './People';
 import styles from './Faculty.module.css';
 
+// The map of the speakers, fetched only when someone opens it (it brings
+// d3-geo and the state outlines).
+const SpeakerMap = lazy(() => import('./SpeakerMap'));
+
 // The faculty Portal, for faculty only. Faculty sign in with one password
 // that BEI shares with all of them, and then have two tabs:
 //
 //   Course Materials  /faculty/portal               browse the folders, download files
 //   Speakers          /faculty/portal?tab=speakers  the conference speakers: names,
-//                                                  emails and details, no pictures
+//                                                  emails and details, no pictures;
+//                     ...?tab=speakers&view=map     the same speakers on a map, by
+//                                                  place (SpeakerMap.jsx)
 //
 // Nothing confidential is in this site's code. The folder listing, every file
 // and the speaker list come from the backend, and only for a signed-in visitor.
@@ -261,7 +267,19 @@ export default function Portal() {
 
 // ---- The speakers ------------------------------------------------------------
 
+// The speakers as a list or on a map. The view is in the address, so Back
+// returns from the map to the list. The search and area filter stay put (and
+// keep what was typed) when the view changes; only the list or the map under
+// them rises in again.
+const VIEWS = [
+  { view: 'list', to: '/faculty/portal?tab=speakers', label: 'List' },
+  { view: 'map', to: '/faculty/portal?tab=speakers&view=map', label: 'Map' },
+];
+
 function Speakers({ state, onRetry }) {
+  const [params] = useSearchParams();
+  const view = params.get('view') === 'map' ? 'map' : 'list';
+
   if (state.status === 'error') {
     return (
       <div className={`${styles.problem} ${styles.enter}`} role="alert">
@@ -280,10 +298,71 @@ function Speakers({ state, onRetry }) {
     );
   }
   return (
-    <div className={styles.enter}>
-      <People people={state.people} searchLabel="Search the speakers" />
-    </div>
+    <People
+      people={state.people}
+      searchLabel="Search the speakers"
+      aside={<ViewSwitch view={view} />}
+      renderShown={view === 'map' ? (shown) => <MapView people={shown} /> : undefined}
+      rise={styles.enter}
+      bodyKey={view}
+    />
   );
+}
+
+function ViewSwitch({ view }) {
+  return (
+    <nav className={styles.viewSwitch} aria-label="Show the speakers">
+      {VIEWS.map((option) => (
+        <Link
+          key={option.view}
+          to={option.to}
+          className={styles.viewOption}
+          aria-current={option.view === view ? 'page' : undefined}
+        >
+          {option.label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+function MapView({ people }) {
+  return (
+    <MapProblem>
+      <Suspense
+        fallback={
+          <p className={`${styles.text} ${styles.waiting}`} role="status">
+            Loading the map…
+          </p>
+        }
+      >
+        <SpeakerMap people={people} />
+      </Suspense>
+    </MapProblem>
+  );
+}
+
+// If the map's code cannot be fetched (the connection dropped, or a new
+// version of the site has replaced it), say so instead of breaking the page.
+// The list still works.
+class MapProblem extends Component {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return (
+      <div className={styles.problem} role="alert">
+        <p>The map could not be loaded. Reload the page to try again; the list still works.</p>
+        <button className={styles.cta} type="button" onClick={() => window.location.reload()}>
+          Reload
+        </button>
+      </div>
+    );
+  }
 }
 
 // ---- The folder browser ----------------------------------------------------

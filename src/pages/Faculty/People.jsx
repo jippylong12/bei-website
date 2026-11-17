@@ -9,7 +9,18 @@ import styles from './Faculty.module.css';
 // note under the title, and the email as a link (only the signed-in speaker
 // list has these; the public directory never sends them). `searchLabel` names
 // the search box for screen readers.
-export default function People({ people, imageUrl, searchLabel }) {
+//
+// The Portal's Speakers also has a map (SpeakerMap.jsx), which shows the same
+// search and filter, so for it:
+// - `aside` sits at the end of the count line (the List | Map switch);
+// - `renderShown(people)` draws the people the search and filter leave
+//   instead of the rows (the map);
+// - `rise` is the class that brings content in (Faculty.module.css .enter),
+//   put on the search and count, and separately on what is under them, and
+//   `bodyKey` names what is under them: when it changes (List to Map), only
+//   that part is new and rises in again, and what was typed in the search
+//   stays. Without `rise` the caller brings the whole list in.
+export default function People({ people, imageUrl, searchLabel, aside, renderShown, rise, bodyKey }) {
   const [query, setQuery] = useState('');
   const [area, setArea] = useState(''); // '' = every area
 
@@ -38,73 +49,89 @@ export default function People({ people, imageUrl, searchLabel }) {
 
   return (
     <>
-      <div className={styles.toolbar}>
-        <input
-          className={`${styles.input} ${styles.search}`}
-          type="search"
-          aria-label={searchLabel}
-          placeholder="Search by name or organization"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        {/* Only when the list gives areas: an "All" button alone filters nothing. */}
-        {areas.length > 0 && (
-          <div className={styles.areas} role="group" aria-label="Show one area">
-            <AreaButton label="All" count={people.length} active={!area} onClick={() => setArea('')} />
-            {areas.map(([name, count]) => (
-              <AreaButton
-                key={name}
-                label={name}
-                count={count}
-                active={area === name}
-                onClick={() => setArea(name)}
-              />
-            ))}
-          </div>
-        )}
+      <div className={rise}>
+        <div className={styles.toolbar}>
+          <input
+            className={`${styles.input} ${styles.search}`}
+            type="search"
+            aria-label={searchLabel}
+            placeholder="Search by name or organization"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          {/* Only when the list gives areas: an "All" button alone filters nothing. */}
+          {areas.length > 0 && (
+            <div className={styles.areas} role="group" aria-label="Show one area">
+              <AreaButton label="All" count={people.length} active={!area} onClick={() => setArea('')} />
+              {areas.map(([name, count]) => (
+                <AreaButton
+                  key={name}
+                  label={name}
+                  count={count}
+                  active={area === name}
+                  onClick={() => setArea(name)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className={styles.countBar}>
+          <p className={styles.count} role="status">
+            {shown.length === people.length ? total : `${shown.length} of ${total}`}
+          </p>
+          {aside}
+        </div>
       </div>
 
-      <p className={styles.count} role="status">
-        {shown.length === people.length ? total : `${shown.length} of ${total}`}
-      </p>
-
-      {shown.length === 0 ? (
-        <p className={styles.empty}>
-          Nobody matches that.{' '}
-          <button
-            className={styles.linkButton}
-            type="button"
-            onClick={() => {
-              setQuery('');
-              setArea('');
-            }}
-          >
-            Show everyone
-          </button>
-        </p>
-      ) : (
-        <ul className={styles.people}>
-          {shown.map(({ person, index }) => (
-            <li key={index} className={`${styles.person} ${imageUrl ? '' : styles.personPlain}`}>
-              {imageUrl && <Portrait person={person} imageUrl={imageUrl} />}
-              <div className={styles.personMain}>
-                <h2 className={styles.name}>
-                  {person.first_name} {person.last_name}
-                </h2>
-                {person.title && <p className={styles.role}>{person.title}</p>}
-                {details(person) && <p className={styles.role}>{details(person)}</p>}
-                {person.email && (
-                  <a className={styles.email} href={`mailto:${person.email}`}>
-                    {person.email}
-                  </a>
-                )}
-              </div>
-              {person.affiliation && <p className={styles.org}>{person.affiliation}</p>}
-            </li>
-          ))}
-        </ul>
-      )}
+      <div key={bodyKey} className={rise}>
+        {shown.length === 0 ? (
+          <p className={styles.empty}>
+            Nobody matches that.{' '}
+            <button
+              className={styles.linkButton}
+              type="button"
+              onClick={() => {
+                setQuery('');
+                setArea('');
+              }}
+            >
+              Show everyone
+            </button>
+          </p>
+        ) : renderShown ? (
+          renderShown(shown.map(({ person }) => person))
+        ) : (
+          <PersonRows shown={shown} imageUrl={imageUrl} />
+        )}
+      </div>
     </>
+  );
+}
+
+// One row per person: [headshot] [name, title, details, email] [organisation].
+function PersonRows({ shown, imageUrl }) {
+  return (
+    <ul className={styles.people}>
+      {shown.map(({ person, index }) => (
+        <li key={index} className={`${styles.person} ${imageUrl ? '' : styles.personPlain}`}>
+          {imageUrl && <Portrait person={person} imageUrl={imageUrl} />}
+          <div className={styles.personMain}>
+            <h2 className={styles.name}>
+              {person.first_name} {person.last_name}
+            </h2>
+            {person.title && <p className={styles.role}>{person.title}</p>}
+            {details(person) && <p className={styles.role}>{details(person)}</p>}
+            {person.email && (
+              <a className={styles.email} href={`mailto:${person.email}`}>
+                {person.email}
+              </a>
+            )}
+          </div>
+          {person.affiliation && <p className={styles.org}>{person.affiliation}</p>}
+        </li>
+      ))}
+    </ul>
   );
 }
 

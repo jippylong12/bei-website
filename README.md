@@ -48,6 +48,22 @@ lead to this page.
   (`/faculty/portal?tab=speakers`, the conference speakers). The page carries
   `noindex` and is disallowed in `public/robots.txt`.
 
+The Speakers tab shows the speakers as a **List** or on a **Map**
+(`/faculty/portal?tab=speakers&view=map`; the switch is at the end of the
+count line). The map (`SpeakerMap.jsx`, with the grouping in
+`speakerPlaces.js`) is a map of the United States with a gold pin for each
+place, sized by its number of speakers, beside a panel listing every place;
+choosing a place, by its pin or in the panel, lists its speakers there. The
+search and area filter apply to both views and keep what was typed when the
+view changes. Places so close that their pins would cover each other share a
+pin (more of them on a phone). A place outside the United States, and speakers
+whose place is not known, are in the panel and in the note under the map.
+Where each place is arrives with the speakers: the backend adds each one's
+`lat` and `lon` from its `places.csv` (see `docs/FACULTY.md` in `btc_rag`), so
+a new speaker from a new place needs a line there, or they are listed under
+"Place not known". The map's code, d3-geo and the state outlines (`us-atlas`)
+load only when the map is opened.
+
 Both are built from the site's own parts (the gold and outlined buttons, and
 the bordered panel of rows the 2026 agenda uses), so they look like the rest
 of the site. If those parts are restyled,
@@ -61,8 +77,8 @@ password set.
 
 **None of the data is in this repository, and none may be added.** This
 repository is public. The directory, the headshots, the logos, the folder
-listing, the files and the speaker list all arrive from the backend at run
-time, and the Portal's only for a signed-in person. The tests use made-up
+listing, the files and the speaker list (with where each speaker is) all
+arrive from the backend at run time, and the Portal's only for a signed-in person. The tests use made-up
 people, passwords and files.
 
 "Faculty" is in the header menu. `Header.module.css` uses a 1.5rem gap and

@@ -446,6 +446,220 @@ describe('the tabs', () => {
   });
 });
 
+// As the backend sends them for the map: each with the lat and lon of its
+// place. Two in Austin, one in Seattle, one in London (off the map of the
+// United States) and one whose place is not known.
+const AUSTIN = { location: 'Austin', lat: 30.2672, lon: -97.7431 };
+const MAP_SPEAKERS = [
+  {
+    first_name: 'Ada',
+    last_name: 'Lovelace',
+    email: 'ada@example.org',
+    title: 'Professor',
+    affiliation: 'Example University',
+    area: 'Developer',
+    class_speaker: 'Agreed',
+    ...AUSTIN,
+  },
+  {
+    first_name: 'Grace',
+    last_name: 'Hopper',
+    email: '',
+    title: 'Rear Admiral',
+    affiliation: '',
+    area: 'Mining',
+    class_speaker: '',
+    ...AUSTIN,
+  },
+  {
+    first_name: 'Mary',
+    last_name: 'Somerville',
+    email: 'mary@example.org',
+    title: 'Astronomer',
+    affiliation: 'Example Observatory',
+    area: 'Mining',
+    class_speaker: '',
+    location: 'Seattle',
+    lat: 47.6062,
+    lon: -122.3321,
+  },
+  { ...SPEAKERS[0], lat: 51.5074, lon: -0.1278 }, // Charles Babbage, London
+  { ...SPEAKERS[1], lat: null, lon: null }, // Emmy Noether, no place
+];
+
+describe('the speakers map', () => {
+  // Open the Speakers tab in the given view with MAP_SPEAKERS; for the map,
+  // wait until it is drawn, state outlines and all.
+  async function openSpeakers(view = 'map') {
+    const calls = await openMaterials({
+      address: `/faculty/portal?tab=speakers${view === 'map' ? '&view=map' : ''}`,
+      routes: { 'GET /api/faculty/speakers': speakers(MAP_SPEAKERS) },
+    });
+    if (view === 'map') {
+      await screen.findByRole('img', { name: /^Map of the United States/ }, { timeout: 5000 });
+      await waitFor(() => expect(document.querySelector(`.${styles.nation}`)).toBeTruthy());
+    } else {
+      await screen.findByRole('heading', { level: 2, name: 'Ada Lovelace' });
+    }
+    return calls;
+  }
+
+  const views = () =>
+    within(screen.getByRole('navigation', { name: 'Show the speakers' }))
+      .getAllByRole('link')
+      .map((a) => `${a.textContent}${a.getAttribute('aria-current') === 'page' ? ' *' : ''}`);
+  const panelHeading = () => screen.getByRole('heading', { level: 2 }).textContent;
+  // The panel's places, by what each button says ("Austin 2") and what it is
+  // called for a screen reader ("Austin: 2 speakers").
+  const placeButtons = () =>
+    within(screen.getAllByRole('list').at(-1))
+      .getAllByRole('button')
+      .map((b) => `${b.textContent} | ${b.getAttribute('aria-label')}`);
+  const pins = () => [...document.querySelectorAll('[data-places]')];
+  const pinNames = () => pins().map((pin) => `${pin.dataset.places} ${pin.querySelector('text').textContent}`);
+  const names = (level = 3) => screen.getAllByRole('heading', { level }).map((h) => h.textContent);
+
+  it('is the second view of the speakers, beside the list', async () => {
+    await openSpeakers('list');
+
+    expect(views()).toEqual(['List *', 'Map']);
+    expect(screen.getByRole('link', { name: 'Map' }).getAttribute('href')).toBe('/faculty/portal?tab=speakers&view=map');
+    openTab('Map');
+
+    await screen.findByRole('img', { name: /^Map of the United States/ }, { timeout: 5000 });
+    expect(views()).toEqual(['List', 'Map *']);
+    expect(tabs()).toEqual(['Course Materials', 'Speakers *']);
+    await waitFor(() => expect(document.querySelector(`.${styles.nation}`)).toBeTruthy());
+  });
+
+  it('has a pin for each place in the United States and lists every place beside it', async () => {
+    await openSpeakers();
+
+    expect(pinNames()).toEqual(['Austin 2', 'Seattle 1']);
+    expect(panelHeading()).toBe('3 places');
+    // Most speakers first, the speakers with no known place last.
+    expect(placeButtons()).toEqual([
+      'Austin 2 | Austin: 2 speakers',
+      'London 1 | London: 1 speaker',
+      'Seattle 1 | Seattle: 1 speaker',
+      'Place not known 1 | Place not known: 1 speaker',
+    ]);
+    // London and the unknown place are not on the map; the note says so.
+    const note = document.querySelector('figcaption');
+    expect(note.textContent).toBe('Not on the map: London (1) · Place not known (1)');
+  });
+
+  it('lists the speakers of a place chosen in the panel, and goes back to every place', async () => {
+    await openSpeakers();
+
+    click('Austin: 2 speakers');
+
+    expect(panelHeading()).toBe('Austin');
+    expect(document.activeElement).toBe(screen.getByRole('heading', { level: 2 }));
+    expect(screen.getByText('2 speakers')).toBeTruthy();
+    expect(names()).toEqual(['Ada Lovelace', 'Grace Hopper']);
+    const ada = screen.getByRole('heading', { level: 3, name: 'Ada Lovelace' }).closest('li');
+    expect([...ada.querySelectorAll('p')].map((p) => p.textContent)).toEqual([
+      'Professor, Example University',
+      'Developer · Class speaker: Agreed',
+    ]);
+    expect(within(ada).getByRole('link', { name: 'ada@example.org' }).getAttribute('href')).toBe('mailto:ada@example.org');
+    // Grace has no email and no organisation: no link, no stray comma.
+    const grace = screen.getByRole('heading', { level: 3, name: 'Grace Hopper' }).closest('li');
+    expect(within(grace).queryByRole('link')).toBeNull();
+    expect(within(grace).getByText('Rear Admiral')).toBeTruthy();
+    // Its pin is marked, with its name beside it.
+    const austin = pins().find((pin) => pin.dataset.places === 'Austin');
+    expect(austin.getAttribute('class')).toContain(styles.pinOpen);
+    expect(document.querySelector(`.${styles.pinLabel}`).textContent).toBe('Austin');
+
+    click('All places');
+
+    expect(panelHeading()).toBe('3 places');
+    expect(austin.getAttribute('class')).not.toContain(styles.pinOpen);
+    expect(document.querySelector(`.${styles.pinLabel}`)).toBeNull();
+  });
+
+  it('opens a place from its pin, and a place off the map from the note', async () => {
+    await openSpeakers();
+
+    fireEvent.click(pins().find((pin) => pin.dataset.places === 'Seattle'));
+    expect(panelHeading()).toBe('Seattle');
+    expect(names()).toEqual(['Mary Somerville']);
+
+    click('All places');
+    click('London');
+    expect(panelHeading()).toBe('London');
+    expect(names()).toEqual(['Charles Babbage']);
+
+    click('All places');
+    click('Place not known');
+    expect(panelHeading()).toBe('Place not known');
+    expect(names()).toEqual(['Emmy Noether']);
+  });
+
+  it('shows only what the search and area filter leave, and keeps them when the view changes', async () => {
+    await openSpeakers();
+
+    type('Search the speakers', 'hopper');
+    expect(pinNames()).toEqual(['Austin 1']);
+    expect(placeButtons()).toEqual(['Austin 1 | Austin: 1 speaker']);
+    expect(panelHeading()).toBe('1 place');
+
+    type('Search the speakers', '');
+    click(/^Mining/);
+    expect(placeButtons()).toEqual(['Austin 1 | Austin: 1 speaker', 'Seattle 1 | Seattle: 1 speaker']);
+    click(/^All/);
+
+    type('Search the speakers', 'lovelace');
+    openTab('List');
+    expect(screen.getByRole('searchbox', { name: 'Search the speakers' }).value).toBe('lovelace');
+    expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual(['Ada Lovelace']);
+  });
+
+  it('goes back to every place when the search leaves out the place that was open', async () => {
+    await openSpeakers();
+    click('London: 1 speaker');
+    expect(panelHeading()).toBe('London');
+
+    type('Search the speakers', 'lovelace');
+
+    expect(panelHeading()).toBe('1 place');
+    expect(placeButtons()).toEqual(['Austin 1 | Austin: 1 speaker']);
+  });
+
+  it('says so when nobody matches, as the list does', async () => {
+    await openSpeakers();
+
+    type('Search the speakers', 'nobody-by-this-name');
+
+    expect(screen.getByText(/Nobody matches that/)).toBeTruthy();
+    expect(screen.queryByRole('img', { name: /^Map of the United States/ })).toBeNull();
+  });
+
+  it('keeps the search in place and rises only the map in, never one part inside another', async () => {
+    await openSpeakers('list');
+    const search = screen.getByRole('searchbox', { name: 'Search the speakers' });
+
+    openTab('Map');
+    await screen.findByRole('img', { name: /^Map of the United States/ }, { timeout: 5000 });
+    await waitFor(() => expect(document.querySelector(`.${styles.nation}`)).toBeTruthy());
+
+    expect(screen.getByRole('searchbox', { name: 'Search the speakers' })).toBe(search);
+    expect(document.querySelectorAll(`.${styles.enter} .${styles.enter}`)).toHaveLength(0);
+    expect(document.querySelector(`.${styles.mapView}`).closest(`.${styles.enter}`)).toBeTruthy();
+  });
+
+  it('leaves the map when the Speakers tab is chosen again', async () => {
+    await openSpeakers();
+
+    openTab('Speakers');
+
+    expect(views()).toEqual(['List *', 'Map']);
+    await screen.findByRole('heading', { level: 2, name: 'Ada Lovelace' });
+  });
+});
+
 describe('browsing', () => {
   it('shows a card per contributor at the top level, folders and single files together', async () => {
     await openMaterials();
