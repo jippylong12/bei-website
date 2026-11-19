@@ -8,6 +8,7 @@ import Contact from './pages/Contact/Contact';
 import Conference from './pages/Conference/Conference';
 import Donate from './pages/Donate/Donate';
 import ChatLazy from './pages/Chat/ChatLazy';
+import PrototypeLazy from './pages/Prototype/PrototypeLazy';
 import Newsletter from './pages/Newsletter/Newsletter';
 import PolicyBot from './pages/PolicyBot/PolicyBot';
 import Maps from './pages/Maps/Maps';
@@ -56,6 +57,11 @@ createRoot(document.getElementById('root')).render(
           <Route path="BitResearch/newsletter" element={<Newsletter />} />
           <Route path="newsletter" element={<Navigate to="/BitResearch/newsletter" replace />} />
           <Route path="research" element={<Navigate to="/BitResearch" replace />} />
+          {/* The BitResearch prototype (100 papers, an open-weight model) for
+              the grant demo, on its own API (src/config/prototypeApi.js). The
+              same posture as /BitResearch: unlinked, noindex,
+              robots-disallowed. See PrototypeLazy. */}
+          <Route path="prototype" element={<PrototypeLazy />} />
           {/* Same posture: unlinked, noindex, robots-disallowed. This one only
               forwards to the SwIRL handbook bot, which is hosted separately —
               it can edit the handbooks, so it is never served from this site. */}

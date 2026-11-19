@@ -1,0 +1,589 @@
+/* The /prototype page. Colours, type and spacing all come from
+   styles/global.css; the chat inside it is /BitResearch's own (Chat.module.css),
+   so this file holds only the page around it: the opening, the chat card, the
+   steps, the benchmark and the list of papers. Gold stays an accent: the
+   section rules, the pressed mode, the bars and the subject tags. */
+
+.page {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md) var(--section-padding);
+}
+
+/* ---- Opening ---- */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-lg);
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-subtle);
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+}
+
+.lede {
+  max-width: 36rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.badges {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.badge {
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+
+.badge:first-child {
+  color: var(--bei-light-gold);
+  border-color: color-mix(in srgb, var(--bei-gold) 45%, transparent);
+}
+
+.badgeStrong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ---- The chat card ----
+   The question box and the examples; once a question is asked, the
+   conversation above the box. The conversation is a fixed height and scrolls
+   inside itself, so the box stays under it and the answer is followed as it
+   streams in. */
+
+.chatCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: color-mix(in srgb, var(--bei-cream) 3%, var(--bei-navy));
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  /* Clear of the sticky header when it is scrolled to. */
+  scroll-margin-top: calc(var(--header-height) + var(--space-sm));
+}
+
+.chatToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chatToolbarTitle {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+}
+
+.chatToolbarActions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.conversation {
+  display: flex;
+  flex-direction: column;
+  height: clamp(20rem, 62dvh, 46rem);
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.examplesLabel {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.exampleList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--space-xs);
+}
+
+.exampleChip {
+  width: 100%;
+  height: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  text-align: left;
+  color: var(--color-text);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.exampleChip:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent-subtle);
+}
+
+.exampleChip:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.chatNote {
+  margin-top: var(--space-xs);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* ---- Sections ---- */
+
+.section {
+  margin-top: var(--space-2xl);
+}
+
+.sectionHead {
+  margin-bottom: var(--space-md);
+}
+
+/* The short gold rule over a section title, as the site's cards carry one. */
+.sectionHead::before {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin-bottom: var(--space-sm);
+  background: var(--color-accent);
+}
+
+.sectionTitle {
+  font-size: clamp(1.5rem, 3.2vw, 1.9rem);
+}
+
+.sectionLede {
+  max-width: 42rem;
+  margin-top: var(--space-xs);
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+.sectionNote {
+  max-width: 44rem;
+  margin-top: var(--space-md);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+.fineprint {
+  margin-top: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- How it works ---- */
+
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md) var(--space-lg);
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.stepNumber {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--bei-light-gold);
+  border: 1px solid color-mix(in srgb, var(--bei-gold) 45%, transparent);
+  border-radius: 50%;
+}
+
+.stepTitle {
+  margin-bottom: 0.2rem;
+  font-size: 1.05rem;
+}
+
+.stepText {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* ---- Benchmark ---- */
+
+.benchGroup {
+  margin-top: var(--space-md);
+}
+
+.benchGroupTitle {
+  margin-bottom: var(--space-xs);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.benchList {
+  list-style: none;
+}
+
+.benchRow {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) 1fr 6.5rem;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--bei-cream) 8%, transparent);
+}
+
+.benchRow:last-child {
+  border-bottom: none;
+}
+
+.benchLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.88rem;
+  line-height: 1.3;
+}
+
+.benchNote {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.benchTrack {
+  display: block;
+  height: 0.6rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bei-cream) 6%, transparent);
+  border-radius: 2px;
+}
+
+.benchBar {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 2px;
+}
+
+.benchBarMuted {
+  background: color-mix(in srgb, var(--bei-cream) 45%, transparent);
+}
+
+.benchValue {
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.benchCount {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+/* ---- The papers ---- */
+
+.statsWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.browser {
+  margin-top: var(--space-xl);
+}
+
+.browserControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-sm);
+}
+
+.field {
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+
+.field::placeholder {
+  color: color-mix(in srgb, var(--bei-cream) 50%, var(--bei-navy));
+}
+
+.field:hover {
+  border-color: color-mix(in srgb, var(--bei-cream) 40%, transparent);
+}
+
+.field:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.searchField {
+  flex: 1 1 16rem;
+}
+
+.subjectField {
+  flex: 0 1 17rem;
+}
+
+.browserCount {
+  margin-top: var(--space-sm);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.paperList {
+  list-style: none;
+  margin-top: var(--space-xs);
+  border-top: 1px solid var(--color-border);
+}
+
+.paper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.paperTitle {
+  width: fit-content;
+  max-width: 100%;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+a.paperTitle:hover {
+  color: var(--color-accent);
+}
+
+.paperLinkIcon {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  color: var(--color-accent-subtle);
+}
+
+.paperMeta {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.paperTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
+
+.tag {
+  padding: 0.05rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--bei-light-gold);
+  background: color-mix(in srgb, var(--bei-gold) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bei-gold) 40%, transparent);
+  border-radius: 999px;
+}
+
+.tagQuiet {
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: none;
+  border-color: var(--color-border);
+}
+
+.doiLink {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--bei-cream) 30%, transparent);
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+
+.doiLink:hover {
+  color: var(--color-accent);
+}
+
+.paperAbstract summary {
+  width: fit-content;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.paperAbstract summary:hover {
+  color: var(--color-accent);
+}
+
+.paperAbstract p {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* The site's outlined button (the agenda's "Download"). */
+.moreButton {
+  margin-top: var(--space-md);
+  padding: 0.6rem 1.5rem;
+  min-height: 2.75rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.moreButton:hover {
+  color: var(--bei-navy);
+  background: var(--color-accent);
+}
+
+.quiet {
+  margin-top: var(--space-md);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+.linkButton {
+  font: inherit;
+  color: var(--color-accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.linkButton:hover {
+  color: var(--color-text);
+}
+
+/* ---- Phones ---- */
+
+@media (max-width: 640px) {
+  .page {
+    padding: var(--space-lg) var(--space-sm) var(--section-padding);
+  }
+
+  .lede {
+    font-size: 1rem;
+  }
+
+  .chatCard {
+    padding: var(--space-sm) 0.75rem;
+  }
+
+  /* Below 16px, iOS Safari zooms the page when the box is focused. */
+  .composer textarea {
+    font-size: 16px;
+  }
+
+  .exampleList {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    margin-top: var(--space-xl);
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  /* Name and figure on one line, the bar under them at full width. */
+  .benchRow {
+    grid-template-columns: 1fr auto;
+  }
+
+  .benchTrack {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .searchField,
+  .subjectField {
+    flex: 1 1 100%;
+  }
+
+  .moreButton {
+    width: 100%;
+  }
+}

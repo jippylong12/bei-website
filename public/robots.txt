@@ -7,6 +7,10 @@ Disallow: /BitResearch
 Disallow: /bitresearch
 Disallow: /research
 
+# The BitResearch prototype (the grant demo) is shared the same way: by direct
+# link, never linked from btcedu.org, kept out of search results.
+Disallow: /prototype
+
 # The SwIRL handbook bot is for staff. This path only forwards to it; the bot
 # itself is hosted separately and never served from this site. Keeping it out of
 # search matters more now that the bot itself has no login.

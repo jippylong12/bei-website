@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_BASE } from '../../config/api';
-import { clearMessages, loadMessages, saveMessages } from './storage';
+import { defaultStore } from './storage';
 
 // How many prior messages accompany each turn (the API caps at 12).
 const HISTORY_LIMIT = 12;
@@ -12,6 +12,9 @@ const makeId = () => `m${Date.now().toString(36)}-${nextId++}`;
  * Reads one POST /api/chat response body as Server-Sent Events.
  * EventSource can't POST, so this is a small hand-rolled parser:
  * blocks are separated by \n\n; each block has `event:` and `data:` lines.
+ * CRLF line ends (some SSE libraries' default) are read as LF. The whole
+ * buffer is normalised, not each chunk, so a \r\n split across two chunks
+ * never turns into a false frame break.
  */
 async function readSse(body, onEvent) {
   const reader = body.getReader();
@@ -20,7 +23,7 @@ async function readSse(body, onEvent) {
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    buffer += decoder.decode(value, { stream: true });
+    buffer = (buffer + decoder.decode(value, { stream: true })).replace(/\r\n/g, '\n');
     let sep;
     while ((sep = buffer.indexOf('\n\n')) !== -1) {
       const block = buffer.slice(0, sep);
@@ -44,16 +47,26 @@ async function readSse(body, onEvent) {
 const FRIENDLY_NETWORK_ERROR =
   'The research chat could not be reached — it may be offline. Please try again later.';
 
-export default function useChatStream() {
-  const [messages, setMessages] = useState(loadMessages);
+// Options, for pages other than /BitResearch (the /prototype page); the
+// defaults are what /BitResearch has always used:
+// - apiBase: where /api/chat and /api/feedback are.
+// - store: where the conversation is kept between visits (storage.js). Each
+//   page keeps its own, so two chat pages never share a conversation.
+// - networkError: the message when the API cannot be reached.
+export default function useChatStream({
+  apiBase = API_BASE,
+  store = defaultStore,
+  networkError = FRIENDLY_NETWORK_ERROR,
+} = {}) {
+  const [messages, setMessages] = useState(store.load);
   const [isStreaming, setIsStreaming] = useState(false);
   const abortRef = useRef(null);
 
   // Cheap now that the store is a module variable, so it also runs mid-stream:
   // a partial answer survives navigating away and back within the site.
   useEffect(() => {
-    saveMessages(messages);
-  }, [messages]);
+    store.save(messages);
+  }, [messages, store]);
 
   // abort an in-flight stream if the user navigates away from the page
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -97,7 +110,7 @@ export default function useChatStream() {
       abortRef.current = controller;
 
       try {
-        const res = await fetch(`${API_BASE}/api/chat`, {
+        const res = await fetch(`${apiBase}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: question, history, mode }),
@@ -105,7 +118,7 @@ export default function useChatStream() {
         });
 
         if (!res.ok) {
-          let msg = FRIENDLY_NETWORK_ERROR;
+          let msg = networkError;
           try {
             const err = await res.json();
             if (err?.message) msg = err.message;
@@ -143,7 +156,7 @@ export default function useChatStream() {
             patchMessage(assistantId, {
               status: 'error',
               statusText: null,
-              errorMessage: data.message || FRIENDLY_NETWORK_ERROR,
+              errorMessage: data.message || networkError,
             });
           }
         });
@@ -151,7 +164,7 @@ export default function useChatStream() {
         // stream ended without a done/error frame (connection dropped)
         patchMessage(assistantId, (m) =>
           m.status === 'streaming'
-            ? { status: m.content ? 'stopped' : 'error', statusText: null, errorMessage: m.content ? undefined : FRIENDLY_NETWORK_ERROR }
+            ? { status: m.content ? 'stopped' : 'error', statusText: null, errorMessage: m.content ? undefined : networkError }
             : {}
         );
       } catch (e) {
@@ -160,7 +173,7 @@ export default function useChatStream() {
         } else {
           patchMessage(assistantId, (m) =>
             m.status === 'streaming'
-              ? { status: 'error', statusText: null, errorMessage: FRIENDLY_NETWORK_ERROR }
+              ? { status: 'error', statusText: null, errorMessage: networkError }
               : {}
           );
         }
@@ -169,38 +182,41 @@ export default function useChatStream() {
         setIsStreaming(false);
       }
     },
-    [messages, isStreaming, patchMessage]
+    [messages, isStreaming, patchMessage, apiBase, networkError]
   );
 
   const stop = useCallback(() => abortRef.current?.abort(), []);
 
   // Record a 👍/👎 on an answer. Optimistically marks the message; the POST is
   // fire-and-forget (a failed feedback write must never disrupt the chat).
+  // MessageList passes the answer's turn id; reading it back inside the
+  // state updater is kept only as a fallback for a caller that does not, since
+  // React runs that updater later whenever another update is queued.
   const sendFeedback = useCallback(
-    (id, rating) => {
-      let turnId = null;
+    (id, rating, knownTurnId) => {
+      let turnId = knownTurnId || null;
       setMessages((prev) =>
         prev.map((m) => {
           if (m.id !== id) return m;
-          turnId = m.turnId;
+          turnId = turnId || m.turnId;
           return { ...m, feedback: rating };
         })
       );
       if (!turnId) return;
-      fetch(`${API_BASE}/api/feedback`, {
+      fetch(`${apiBase}/api/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ turn_id: turnId, rating }),
       }).catch(() => {});
     },
-    []
+    [apiBase]
   );
 
   const reset = useCallback(() => {
     abortRef.current?.abort();
-    clearMessages();
+    store.clear();
     setMessages([]);
-  }, []);
+  }, [store]);
 
   return { messages, isStreaming, send, stop, reset, sendFeedback };
 }

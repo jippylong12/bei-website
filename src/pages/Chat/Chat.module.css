@@ -68,6 +68,15 @@
   gap: var(--space-sm);
 }
 
+/* Fewer than four tiles (a corpus whose API sends only some of the figures):
+   centred side by side instead of leaving empty grid columns. */
+.statRowFew {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md) var(--space-xl);
+}
+
 .statTile {
   display: flex;
   flex-direction: column;
@@ -944,6 +953,56 @@ a.chip:hover {
 .deepToggle:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+/* Quick · Deep, two joined buttons (Composer modeControl="segmented"). The
+   pressed one is filled gold, as the lone Deep pill is when on. */
+.modeSwitch {
+  flex: none;
+  align-self: flex-end;
+  display: inline-flex;
+  margin: 0.15rem 0 0.15rem 0.15rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.modeOption {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  padding: 0.45rem 0.8rem;
+  min-height: 2.25rem;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.modeOption + .modeOption {
+  border-left: 1px solid var(--color-border);
+}
+
+.modeOption:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.modeOptionOn,
+.modeOptionOn:hover:not(:disabled) {
+  color: var(--bei-navy);
+  background: var(--color-accent);
+}
+
+.modeOption:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.modeOption:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .sendButton,

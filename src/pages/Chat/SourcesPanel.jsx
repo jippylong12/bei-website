@@ -20,14 +20,31 @@ function doiHref(doi) {
 }
 
 // Corpus PDF hosted by the API. `pdf` is a path, not an absolute URL, so it is
-// prefixed with API_BASE like every other backend call — a bare /api/... would
-// resolve against btcedu.org, which serves no API.
-function pdfHref(s) {
-  return s.pdf ? `${API_BASE}${s.pdf}` : null;
+// prefixed with the API's base like every other backend call — a bare /api/...
+// would resolve against btcedu.org, which serves no API.
+function pdfHref(s, apiBase) {
+  return s.pdf ? `${apiBase}${s.pdf}` : null;
+}
+
+// The API cuts the snippet and the abstract at these lengths; only text that
+// reached the cap was cut, so only that gets an ellipsis.
+const SNIPPET_CAP = 300;
+const ABSTRACT_CAP = 800;
+const clipped = (text, cap) => (text.length >= cap ? `${text}…` : text);
+
+// A safety net for messy metadata (tidyMetadata): a title that is really a
+// file name ("What_drives_Bitcoin_fees") gets its spaces back, and an author
+// field long enough to be scraped body text rather than names is left out.
+const MAX_AUTHORS_CHARS = 120;
+function tidyTitle(title) {
+  return title && !/\s/.test(title) ? title.replace(/_+/g, ' ').trim() : title;
+}
+function tidyAuthors(authors) {
+  return authors && String(authors).length > MAX_AUTHORS_CHARS ? null : authors;
 }
 
 // Identifier chips shown under a source: DOI / arXiv / PDF (linked) + chunk count.
-function sourceChips(s) {
+function sourceChips(s, { showPdf, apiBase }) {
   const chips = [];
   const dh = doiHref(s.doi);
   if (dh) chips.push({ key: 'doi', label: 'DOI', href: dh });
@@ -37,13 +54,27 @@ function sourceChips(s) {
   // no DOI, arXiv id or publisher URL, whose titles would otherwise be dead text
   // with nowhere for a reader to go. Papers the publisher hosts get null here, so
   // this chip never competes with the DOI link and never 404s.
-  const ph = pdfHref(s);
+  const ph = showPdf ? pdfHref(s, apiBase) : null;
   if (ph) chips.push({ key: 'pdf', label: 'PDF', href: ph });
   if (s.num_chunks) chips.push({ key: 'chunks', label: `${s.num_chunks} chunks`, ghost: true });
   return chips;
 }
 
-export default function SourcesPanel({ sources, citationsUsed, open, onToggle, activeSource }) {
+// Optional props, for pages other than /BitResearch; the defaults are what it
+// has always shown. showPdf / showEmails: the PDF chip and the authors'
+// e-mail line. apiBase: where a PDF path is served from. tidyMetadata: the
+// safety net above.
+export default function SourcesPanel({
+  sources,
+  citationsUsed,
+  open,
+  onToggle,
+  activeSource,
+  showPdf = true,
+  showEmails = true,
+  tidyMetadata = false,
+  apiBase = API_BASE,
+}) {
   if (!sources?.length) return null;
   const citedSet = new Set(citationsUsed || []);
 
@@ -59,8 +90,9 @@ export default function SourcesPanel({ sources, citationsUsed, open, onToggle, a
             const pages = formatPages(s);
             const isActive = activeSource === s.index;
             const affils = (s.affiliations || []).filter(Boolean).slice(0, 4);
-            const emails = (s.emails || []).filter(Boolean).slice(0, 4);
-            const chips = sourceChips(s);
+            const emails = showEmails ? (s.emails || []).filter(Boolean).slice(0, 4) : [];
+            const chips = sourceChips(s, { showPdf, apiBase });
+            const authors = tidyMetadata ? tidyAuthors(s.authors) : s.authors;
             return (
               <li
                 key={s.index}
@@ -73,7 +105,7 @@ export default function SourcesPanel({ sources, citationsUsed, open, onToggle, a
                 <div className={styles.sourceBody}>
                   {(() => {
                     const href = sourceHref(s);
-                    const label = s.title || s.filename;
+                    const label = tidyMetadata ? tidyTitle(s.title || s.filename) : s.title || s.filename;
                     return href ? (
                       <a
                         className={styles.sourceTitleLink}
@@ -97,7 +129,7 @@ export default function SourcesPanel({ sources, citationsUsed, open, onToggle, a
                   })()}
                   <span className={styles.sourceMeta}>
                     {s.category && <span className={styles.sourceCat}>{s.category}</span>}
-                    {[s.authors, s.year, s.section ? `§ ${s.section}` : null, pages]
+                    {[authors, s.year, s.section ? `§ ${s.section}` : null, pages]
                       .filter(Boolean)
                       .join(' · ')}
                   </span>
@@ -143,11 +175,11 @@ export default function SourcesPanel({ sources, citationsUsed, open, onToggle, a
                       )}
                     </span>
                   )}
-                  {s.snippet && <p className={styles.sourceSnippet}>{s.snippet}…</p>}
+                  {s.snippet && <p className={styles.sourceSnippet}>{clipped(s.snippet, SNIPPET_CAP)}</p>}
                   {s.abstract && (
                     <details className={styles.sourceAbstract}>
                       <summary className={styles.sourceAbstractSummary}>Abstract</summary>
-                      <p className={styles.sourceAbstractText}>{s.abstract}…</p>
+                      <p className={styles.sourceAbstractText}>{clipped(s.abstract, ABSTRACT_CAP)}</p>
                     </details>
                   )}
                   {typeof s.score === 'number' && (

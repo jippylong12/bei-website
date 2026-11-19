@@ -24,13 +24,28 @@ function barPath(bx, barW, by) {
   ].join(' ');
 }
 
-export default function CorpusStats({ stats, onPick }) {
+// Gridline step for the year chart's tallest bar. The large steps are the ones
+// a corpus of thousands has always used; the small ones keep a corpus of a
+// hundred papers (a peak of a dozen or so a year) from being drawn as short
+// bars under one gridline.
+function tickStepFor(peak) {
+  if (peak > 400) return 250;
+  if (peak > 150) return 100;
+  if (peak > 60) return 50;
+  if (peak > 25) return 10;
+  return 5;
+}
+
+// Optional: noteUndated says under the year chart how many papers have no
+// recorded year (from stats.undated), so the bars visibly do not sum to the
+// total. /BitResearch leaves it off.
+export default function CorpusStats({ stats, onPick, noteUndated = false }) {
   const [hover, setHover] = useState(null);
 
   const chart = useMemo(() => {
     const { byYear } = stats;
     const peak = Math.max(...byYear.map(([, n]) => n));
-    const tickStep = peak > 400 ? 250 : peak > 150 ? 100 : 50;
+    const tickStep = tickStepFor(peak);
     const yMax = Math.max(Math.ceil(peak * 1.03), tickStep);
     const ticks = [];
     for (let t = 0; t <= yMax; t += tickStep) ticks.push(t);
@@ -41,12 +56,14 @@ export default function CorpusStats({ stats, onPick }) {
     return { peak, ticks, band, barW, x, y };
   }, [stats]);
 
+  // A tile with no value (a figure the API does not send and the fallback does
+  // not have) is left out rather than shown empty.
   const headline = [
     { value: stats.papers, label: 'academic papers' },
     { value: stats.researchers, label: 'researchers' },
     { value: stats.venues, label: 'journals & venues' },
     { value: stats.citations, label: 'citations to these papers' },
-  ];
+  ].filter((s) => s.value != null && s.value !== '');
 
   const firstYear = stats.byYear[0][0];
   const lastYear = stats.byYear[stats.byYear.length - 1][0];
@@ -62,7 +79,7 @@ export default function CorpusStats({ stats, onPick }) {
 
   return (
     <div className={styles.corpusStats}>
-      <div className={styles.statRow}>
+      <div className={headline.length < 4 ? `${styles.statRow} ${styles.statRowFew}` : styles.statRow}>
         {headline.map((s) => (
           <div key={s.label} className={styles.statTile}>
             <span className={styles.statValue}>{s.value}</span>
@@ -155,8 +172,11 @@ export default function CorpusStats({ stats, onPick }) {
           )}
         </div>
         <p className={styles.chartFootnote}>
-          {stats.preChart > 0 &&
+          {stats.preChart === 1 && `Plus 1 earlier work from ${stats.earliestYear}. `}
+          {stats.preChart > 1 &&
             `Plus ${stats.preChart} earlier foundational works dating back to ${stats.earliestYear}. `}
+          {noteUndated && stats.undated > 0 &&
+            `${stats.undated} ${stats.undated === 1 ? 'paper has' : 'papers have'} no recorded year and ${stats.undated === 1 ? 'is' : 'are'} not charted. `}
           {lastYear >= new Date().getFullYear() && `${lastYear} is year-to-date.`}
           {asOfLabel && ` Corpus updated ${asOfLabel}.`}
         </p>

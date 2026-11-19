@@ -24,6 +24,39 @@ npm test        # Vitest + Testing Library, in jsdom; no network
 Run it, with `npm run lint` and `npm run build`, before pushing to `main`: a push
 to `main` deploys the site, and the deploy workflow does not run the tests.
 
+## BitResearch prototype (`/prototype`)
+
+A demo page for the BitResearch grant application (`src/pages/Prototype/`):
+questions over a corpus of 100 Bitcoin research papers, answered with
+citations by an open-weight model on our own GPU. It shows the chat (Quick and
+Deep modes, numbered citation chips that open the sources, follow-up
+questions, thumbs feedback), example questions, how it works, the benchmark,
+the corpus figures and a browser of the 100 papers (linked, never hosted).
+Like `/BitResearch`, it is reachable by direct link only: it is not in the
+header menu, it sets `noindex`, and `public/robots.txt` disallows it.
+
+It has its own API, never the production one. The base is
+`VITE_PROTOTYPE_API_URL` (default `https://prototype-api.batchllm-workspace.info`);
+an empty value, or one naming the production API, falls back to that default
+(`src/config/prototypeApi.js`). The API serves `GET /api/health`
+(`model_label`), `/api/stats`, `/api/papers`, `/api/benchmark` (the panel is
+left out on a 404), and `POST /api/chat` (SSE) and `/api/feedback`, in the
+same shapes as the `/BitResearch` chat.
+
+The chat is `/BitResearch`'s own components, given options (the API base, the
+conversation store, chips that open the sources panel, no PDF chip). Their
+defaults are what `/BitResearch` has always done, so a change there shows on
+both pages. The example questions are in `src/pages/Prototype/examples.js`.
+
+To preview against a local API with no CORS set-up, use the dev (or preview)
+proxy, which forwards `/prototype-api/*` to `VITE_DEV_PROTOTYPE_API_TARGET`
+(default `http://localhost:8620`):
+
+```bash
+VITE_PROTOTYPE_API_URL=/prototype-api npm run dev          # then open /prototype
+VITE_PROTOTYPE_API_URL=/prototype-api npm run build && npm run preview
+```
+
 ## Conference page (`/conference`)
 
 One page for every conference year (`src/pages/Conference/Conference.jsx`).

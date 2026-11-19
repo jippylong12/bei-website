@@ -2,7 +2,10 @@ import { useEffect, useRef } from 'react';
 import AssistantMessage from './AssistantMessage';
 import styles from './Chat.module.css';
 
-export default function MessageList({ messages, onFeedback, onAsk }) {
+// `assistantProps` (optional) go to every AssistantMessage; see its options.
+// onFeedback gets the answer's turn id as a third argument, so the feedback
+// POST does not have to read it back out of state.
+export default function MessageList({ messages, onFeedback, onAsk, assistantProps }) {
   const scrollRef = useRef(null);
   const stickRef = useRef(true); // follow the stream unless the user scrolls up
 
@@ -29,8 +32,9 @@ export default function MessageList({ messages, onFeedback, onAsk }) {
             <AssistantMessage
               key={m.id}
               message={m}
-              onFeedback={(rating) => onFeedback?.(m.id, rating)}
+              onFeedback={(rating) => onFeedback?.(m.id, rating, m.turnId)}
               onAsk={onAsk}
+              {...assistantProps}
             />
           )
         )}

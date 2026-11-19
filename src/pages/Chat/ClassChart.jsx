@@ -40,10 +40,16 @@ export default function ClassChart({ stats, onPick }) {
   if (!view.top.length) return null;
 
   const share = (n) => ((n / classified) * 100).toFixed(1);
+  // "The ten largest" only when there are ten and more beyond them; a corpus
+  // with ten classes or fewer has every class on the chart.
+  const title =
+    view.top.length === TOP_N && view.tailClasses > 0
+      ? 'The ten largest subject classes'
+      : 'Papers by primary subject';
 
   return (
     <div className={styles.chartBlock}>
-      <p className={styles.chartTitle}>The ten largest subject classes</p>
+      <p className={styles.chartTitle}>{title}</p>
       <ul className={styles.classChart}>
         {view.top.map(([name, n], i) => {
           // The bar is the same markup either way; only its wrapper differs, so

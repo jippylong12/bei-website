@@ -5,14 +5,28 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import SourcesPanel from './SourcesPanel';
+import { toCitationLinks } from './citations';
 import styles from './Chat.module.css';
 
-// Turn bare [3] citation markers into markdown links (#src-3) so the custom
-// renderer below can draw them as chips. Negative lookahead skips text that
-// is already a markdown link.
-const toCitationLinks = (text) => text.replace(/\[(\d+)\](?!\()/g, '[$1](#src-$1)');
+const DEFAULT_REFUSAL_NOTE =
+  'The corpus did not contain enough evidence to answer this — the assistant only answers ' +
+  'from BEI’s academic papers and never guesses.';
 
-export default function AssistantMessage({ message, onFeedback, onAsk }) {
+// Optional props, for pages other than /BitResearch (the /prototype page). The
+// defaults are exactly what /BitResearch has always done:
+// - chipsOpenPanel: a citation chip opens this answer's sources panel at that
+//   source, even when the source has a link. By default a chip whose source
+//   has a URL links straight to the paper online.
+// - refusalNote: the line under an answer the API marked as a refusal.
+// - sourcesPanelProps: passed through to SourcesPanel.
+export default function AssistantMessage({
+  message,
+  onFeedback,
+  onAsk,
+  chipsOpenPanel = false,
+  refusalNote = DEFAULT_REFUSAL_NOTE,
+  sourcesPanelProps,
+}) {
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const [activeSource, setActiveSource] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -42,7 +56,10 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
         if (href?.startsWith('#src-')) {
           const n = Number(href.slice(5));
           const src = sourceByIndex[n];
-          if (src?.url) {
+          // A number with no source behind it (a bracketed year, or a model
+          // citing past the end of the list) stays the text it was.
+          if (!src) return <>[{n}]</>;
+          if (src.url && !chipsOpenPanel) {
             // chip links to the paper online; title tooltip names it
             return (
               <a
@@ -62,6 +79,7 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
               type="button"
               className={styles.citationChip}
               onClick={() => openSource(n)}
+              title={src.title || src.filename || `Source ${n}`}
               aria-label={`Show source ${n}`}
             >
               {n}
@@ -75,7 +93,7 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
         );
       },
     }),
-    [sourceByIndex]
+    [sourceByIndex, chipsOpenPanel]
   );
 
   return (
@@ -102,12 +120,7 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
 
       {status === 'error' && <p className={styles.errorLine}>{errorMessage}</p>}
       {status === 'stopped' && <p className={styles.stoppedLine}>Response stopped.</p>}
-      {refused && status === 'done' && (
-        <p className={styles.refusalNote}>
-          The corpus did not contain enough evidence to answer this — the assistant only answers
-          from BEI&rsquo;s academic papers and never guesses.
-        </p>
-      )}
+      {refused && status === 'done' && <p className={styles.refusalNote}>{refusalNote}</p>}
 
       {status === 'done' && mode === 'deep' && sources?.length > 0 && (
         <p className={styles.deepMeta}>
@@ -122,6 +135,7 @@ export default function AssistantMessage({ message, onFeedback, onAsk }) {
         open={sourcesOpen}
         onToggle={() => setSourcesOpen((o) => !o)}
         activeSource={activeSource}
+        {...sourcesPanelProps}
       />
 
       {status === 'done' && content && !refused && (

@@ -5,7 +5,10 @@ import { API_BASE } from '../../config/api';
 // shown until GET /api/stats responds — and kept if it can't. Snapshot values
 // are rounded down so they stay true as the corpus grows; live values from the
 // API are exact and refresh with each harvest.
-const FALLBACK = {
+//
+// This is /BitResearch's corpus. Another page with its own API (the /prototype
+// page) passes its own fallback, so these figures never appear there.
+export const FALLBACK = {
   live: false,
   papers: '3,900+',
   papersApprox: '~3,900',
@@ -43,8 +46,22 @@ export const FIRST_CHART_YEAR = 2008;
 
 const fmt = (n) => n.toLocaleString('en-US');
 
+// Every year from the first charted year to the last gets a bar, a zero where
+// the corpus has no paper, so the bars keep their places on the axis. (A small
+// corpus has such gaps; without them the bars closed up and years vanished.)
+function zeroFill(byYear) {
+  const counts = new Map(byYear);
+  const filled = [];
+  for (let y = byYear[0][0]; y <= byYear[byYear.length - 1][0]; y += 1) {
+    filled.push([y, counts.get(y) ?? 0]);
+  }
+  return filled;
+}
+
 // Normalize the /api/stats payload into display form; null if it isn't usable.
-function fromApi(data) {
+// A field the payload lacks keeps its value from `fallback` (a missing tile
+// value stays null if the fallback has none, and the tile is not drawn).
+export function fromApi(data, fallback = FALLBACK) {
   if (!data || typeof data.papers !== 'number' || typeof data.by_year !== 'object' || !data.by_year) {
     return null;
   }
@@ -57,18 +74,21 @@ function fromApi(data) {
     .filter(([y]) => y >= FIRST_CHART_YEAR && y <= maxYear)
     .sort((a, b) => a[0] - b[0]);
   if (!byYear.length) return null;
+  const dated = entries.reduce((s, [, n]) => s + n, 0);
   return {
     live: true,
     papers: fmt(data.papers),
     papersApprox: fmt(data.papers),
-    researchers: typeof data.researchers === 'number' ? fmt(data.researchers) : FALLBACK.researchers,
-    venues: typeof data.venues === 'number' ? fmt(data.venues) : FALLBACK.venues,
-    citations: typeof data.citations === 'number' ? fmt(data.citations) : FALLBACK.citations,
-    byYear,
+    researchers: typeof data.researchers === 'number' ? fmt(data.researchers) : fallback.researchers,
+    venues: typeof data.venues === 'number' ? fmt(data.venues) : fallback.venues,
+    citations: typeof data.citations === 'number' ? fmt(data.citations) : fallback.citations,
+    byYear: zeroFill(byYear),
     preChart: entries.filter(([y]) => y < FIRST_CHART_YEAR).reduce((s, [, n]) => s + n, 0),
     earliestYear: Math.min(...entries.map(([y]) => y)),
+    // Papers with no year in by_year at all; CorpusStats can say so.
+    undated: Math.max(0, data.papers - dated),
     asOf: typeof data.as_of === 'string' ? data.as_of : null,
-    ...classesFromApi(data),
+    ...classesFromApi(data, fallback),
   };
 }
 
@@ -78,8 +98,8 @@ function fromApi(data) {
 // emptying the chart, the same way a missing `venues` keeps its snapshot tile. `classified` is the
 // chart's denominator and is derived from the rows themselves, never from
 // `papers`, which also counts citable papers the classifier has not reached.
-function classesFromApi(data) {
-  const snapshot = { byClass: FALLBACK.byClass, classified: FALLBACK.classified };
+function classesFromApi(data, fallback) {
+  const snapshot = { byClass: fallback.byClass, classified: fallback.classified };
   if (!Array.isArray(data.by_class)) return snapshot;
   const byClass = data.by_class
     .filter((row) => Array.isArray(row) && typeof row[0] === 'string' && row[0].trim())
@@ -89,27 +109,30 @@ function classesFromApi(data) {
   return { byClass, classified: byClass.reduce((sum, [, n]) => sum + n, 0) };
 }
 
-// Fetch once per page load; later mounts reuse the cached result.
-let cached = null;
+// Fetch once per page load and API; later mounts reuse the cached result.
+const cache = new Map();
 
-export default function useCorpusStats() {
-  const [stats, setStats] = useState(cached ?? FALLBACK);
+// Options, for a page with its own API (the /prototype page); the defaults are
+// /BitResearch's: apiBase (where /api/stats is) and fallback (the snapshot
+// shown until it answers, and kept if it cannot).
+export default function useCorpusStats({ apiBase = API_BASE, fallback = FALLBACK } = {}) {
+  const [stats, setStats] = useState(() => cache.get(apiBase) ?? fallback);
 
   useEffect(() => {
-    if (cached) return undefined;
+    if (cache.has(apiBase)) return undefined;
     const ctrl = new AbortController();
-    fetch(`${API_BASE}/api/stats`, { signal: ctrl.signal })
+    fetch(`${apiBase}/api/stats`, { signal: ctrl.signal })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        const live = fromApi(data);
+        const live = fromApi(data, fallback);
         if (live) {
-          cached = live;
+          cache.set(apiBase, live);
           setStats(live);
         }
       })
       .catch(() => {}); // fallback snapshot stays up
     return () => ctrl.abort();
-  }, []);
+  }, [apiBase, fallback]);
 
   return stats;
 }

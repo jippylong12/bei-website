@@ -3,6 +3,15 @@ import styles from './Chat.module.css';
 
 const MAX_CHARS = 2000;
 
+const DEEP_TOGGLE_TITLE =
+  'Deep research: plans multiple corpus searches and synthesizes a broader evidence pool (slower, more thorough)';
+
+// Optional props, for pages other than /BitResearch (the /prototype page); the
+// defaults are what /BitResearch has always shown:
+// - modeControl: 'toggle' (a lone "Deep" pill) or 'segmented' (Quick · Deep,
+//   two buttons, so the current mode is always named).
+// - modeTitles: {quick, deep} tooltips for the segmented control.
+// - placeholder, className (added to the box).
 export default function Composer({
   onSend,
   onStop,
@@ -11,6 +20,10 @@ export default function Composer({
   onToggleDeep,
   autoFocus,
   ref,
+  modeControl = 'toggle',
+  modeTitles = {},
+  placeholder = 'Ask a question about the research…',
+  className = '',
 }) {
   const [text, setText] = useState('');
   const textareaRef = useRef(null);
@@ -66,25 +79,47 @@ export default function Composer({
     }
   };
 
+  const modeButton = (isDeep, label, title) => (
+    <button
+      type="button"
+      className={`${styles.modeOption} ${deep === isDeep ? styles.modeOptionOn : ''}`}
+      onClick={() => {
+        if (deep !== isDeep) onToggleDeep();
+      }}
+      disabled={isStreaming}
+      title={title}
+      aria-pressed={deep === isDeep}
+    >
+      {label}
+    </button>
+  );
+
   return (
-    <div className={styles.composer}>
-      <button
-        type="button"
-        className={`${styles.deepToggle} ${deep ? styles.deepToggleOn : ''}`}
-        onClick={onToggleDeep}
-        disabled={isStreaming}
-        title="Deep research: plans multiple corpus searches and synthesizes a broader evidence pool (slower, more thorough)"
-        aria-pressed={deep}
-      >
-        Deep
-      </button>
+    <div className={className ? `${styles.composer} ${className}` : styles.composer}>
+      {modeControl === 'segmented' ? (
+        <div className={styles.modeSwitch} role="group" aria-label="Answer mode">
+          {modeButton(false, 'Quick', modeTitles.quick)}
+          {modeButton(true, 'Deep', modeTitles.deep)}
+        </div>
+      ) : (
+        <button
+          type="button"
+          className={`${styles.deepToggle} ${deep ? styles.deepToggleOn : ''}`}
+          onClick={onToggleDeep}
+          disabled={isStreaming}
+          title={DEEP_TOGGLE_TITLE}
+          aria-pressed={deep}
+        >
+          Deep
+        </button>
+      )}
       <textarea
         ref={textareaRef}
         className={styles.input}
         value={text}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        placeholder="Ask a question about the research…"
+        placeholder={placeholder}
         rows={1}
         aria-label="Your question"
         autoFocus={autoFocus}
