@@ -1,21 +1,13 @@
 // The example questions under the /prototype question box. A click sends one,
-// so keep only questions the 100 papers answer (the comment above each names
-// the paper it comes from). Edit, add or reorder freely: the page shows them in
-// this order. Keep each short enough to read as one chip on a phone.
+// so keep only questions the 100 papers answer: each of these has a checked
+// reference answer in the prototype's evaluation set. Edit, add or reorder
+// freely; the page shows them in this order. Keep each short enough to read as
+// one chip on a phone.
 export const EXAMPLE_QUESTIONS = [
-  // Fees and block size: "What drives Bitcoin fees? Using SegWit to assess
-  // Bitcoin's long-run sustainability".
+  'How much of the network’s hash power does a mining pool need before selfish mining earns more than honest mining?',
   "In 'What drives Bitcoin fees?', what block size would maximize Bitcoin's fee revenue?",
-  // Markets: "Causal effect of regulated Bitcoin futures on volatility and volume".
-  "Did the launch of regulated Bitcoin futures in December 2017 calm or inflame Bitcoin's volatility?",
-  // Protocol: "He-HTLC: Revisiting Incentives in HTLC".
-  'What attack still breaks MAD-HTLC, and what does He-HTLC offer instead?',
-  // Security: "Bitcoin Transaction Malleability and MtGox".
-  'Did transaction-malleability attacks really drain MtGox, as the exchange claimed in February 2014?',
-  // Mining: "Bitcoin Mining Meets Wall Street: A Study of Publicly Traded
-  // Crypto Mining Companies".
-  'Among NASDAQ-listed Bitcoin miners, are those running on intermittent Texas wind power at a disadvantage?',
-  // Supply: "Estimating the Impact of the Bitcoin Halving on Its Price Using
-  // Synthetic Control".
-  'Did the Bitcoin halvings actually raise Bitcoin\'s price, according to the synthetic-control study?',
+  'How long does a new block take to reach most Bitcoin nodes, and has that improved since the first measurements?',
+  'What share of Bitcoin activity is illegal, and why do published estimates range from under 3% to nearly half?',
+  'Was Bitcoin’s price manipulated on Mt. Gox in 2013 and by Tether in 2017? Where do the studies disagree?',
+  'When El Salvador made Bitcoin legal tender and paid people $30 to try the Chivo wallet, did they keep using it?',
 ];

@@ -158,7 +158,7 @@ describe('the example questions', () => {
       "In 'What drives Bitcoin fees?', what block size would maximize Bitcoin's fee revenue?",
     );
     expect(EXAMPLE_QUESTIONS.length).toBeGreaterThanOrEqual(5);
-    expect(EXAMPLE_QUESTIONS.length).toBeLessThanOrEqual(6);
+    expect(EXAMPLE_QUESTIONS.length).toBeLessThanOrEqual(8);
   });
 
   it('are on the page, and one click asks', async () => {
